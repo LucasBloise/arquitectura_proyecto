@@ -6,6 +6,8 @@ package com.mycompany.proyecto.arq;
 
 import java.util.ArrayList;
 
+import com.mycompany.Estado;
+
 /**
  *
  * @author lucasbloise
@@ -110,6 +112,4 @@ public class Proceso {
 
 }
 
-enum Estado {
-    NUEVO, LISTO, BLOQUEADO, EJECUCCION, TERMINADO
-}
+

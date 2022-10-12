@@ -15,6 +15,7 @@ import com.mycompany.proyecto.arq.Proceso;
  */
 public class ProcesoController {
   static ArrayList<Proceso> procesos = new ArrayList();
+  static ArrayList<Proceso> procesosPorEjecutar = new ArrayList();
   private static Scanner sc = new Scanner(System.in);
 
   public static void cargarProcesos() {
@@ -37,6 +38,10 @@ public class ProcesoController {
       }
       procesos.add(p);
     }
+  }
+
+  public static void cargarProcesosPorEjecutar() {
+    procesosPorEjecutar = procesos;
   }
 
 }
