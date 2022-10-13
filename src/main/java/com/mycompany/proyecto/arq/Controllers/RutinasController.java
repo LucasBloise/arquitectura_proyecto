@@ -9,16 +9,14 @@ public class RutinasController {
     public static void ejecutarProcesos() {
         boolean continuar = false;
         while (quedenProcesos()) {
-            if (tiempo >= 100)
-                break;
-            tiempo += 1;
+            if (tiempo >= 100) break;
             for (Proceso proceso : ProcesoController.procesosPorEjecutar) {
                 if (proceso.getEstado() == Estado.NUEVO) {
                     // grabar en table, le cambio el estado y continue
                     if (proceso.getTiempoDeLlegada() >= tiempo) {
                         continue;
                     }
-                    GraficoController.grafico[6][tiempo] = "1P" + proceso.getNombreProceso();
+                    GraficoController.grafico[5][tiempo] = "1P" + proceso.getNombreProceso();
                     proceso.setEstado(Estado.LISTO);
                     continuar = true;
                 }
@@ -26,6 +24,7 @@ public class RutinasController {
                     continue;
                 }
             }
+            tiempo += 1;
 
         }
         GraficoController.imprimirTabla();

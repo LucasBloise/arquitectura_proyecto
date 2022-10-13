@@ -14,6 +14,30 @@ import com.mycompany.Estado;
  */
 public class Proceso {
 
+    
+    private static int cantidadDeProcesos = 0;
+    private int cantidadRafagas;
+    private int tiempoDeLlegada;
+    private int nombreProceso;
+    private int tiempoRequerido = 0;
+    private int tiempoEmpleado = 0;
+    private int tiempoBloqueado = 0;
+    private ArrayList<Integer> ciclosParaEjecutar = new ArrayList<Integer>();
+    private Estado estado = Estado.NUEVO;
+
+    
+
+    public Proceso(int cantidadRafagas, int tiempoDeLlegada, int nombreProceso, int tiempoRequerido, int tiempoEmpleado, int tiempoBloqueado, ArrayList<Integer> ciclosParaEjecutar, Estado estado){
+        this.cantidadRafagas = cantidadRafagas;
+        this.tiempoDeLlegada = tiempoDeLlegada;
+        this.nombreProceso = nombreProceso;
+        this.tiempoRequerido = tiempoRequerido;
+        this.tiempoEmpleado = tiempoEmpleado;
+        this.tiempoBloqueado = tiempoBloqueado;
+        this.ciclosParaEjecutar = ciclosParaEjecutar;
+        this.estado = estado;
+    }
+
     public static int getCantidadDeProcesos() {
         return cantidadDeProcesos;
     }
@@ -99,16 +123,6 @@ public class Proceso {
         System.out.println("TiempoDeLlegada" + this.tiempoDeLlegada);
         System.out.println("CantidadRafagas" + this.cantidadRafagas);
     }
-
-    private static int cantidadDeProcesos = 0;
-    private int cantidadRafagas;
-    private int tiempoDeLlegada;
-    private int nombreProceso;
-    private int tiempoRequerido = 0;
-    private int tiempoEmpleado = 0;
-    private int tiempoBloqueado = 0;
-    private ArrayList<Integer> ciclosParaEjecutar = new ArrayList<Integer>();
-    private Estado estado = Estado.NUEVO;
 
 }
 

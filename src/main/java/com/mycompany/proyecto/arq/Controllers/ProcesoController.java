@@ -7,6 +7,7 @@ package com.mycompany.proyecto.arq.Controllers;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.mycompany.Estado;
 import com.mycompany.proyecto.arq.Proceso;
 
 /**
@@ -21,22 +22,30 @@ public class ProcesoController {
   public static void cargarProcesos() {
 
     for (int i = 0; i < 3; i++) {
-      Proceso p = new Proceso();
 
       System.out.println("Proceso: " + (i + 1));
-      p.setNombreProceso(i + 1);
+      int nombreProceso = i+1;
       System.out.println("Cantidad de Rafagas de procesamiento");
-      p.setCantidadCiclos(sc.nextInt());
+      int CantidadRafagas = sc.nextInt();
       System.out.println("Tiempo de llegada del proceso");
-      p.setTiempoDeLlegada(sc.nextInt());
+      int tiempoDeLlegada = sc.nextInt();
 
-      for (int j = 0; j < p.getCantidadCiclos(); j++) {
+      ArrayList<Integer> rafagas = new ArrayList<Integer>();
+      int tiempoTotal = 0;
+
+      for (int j = 0; j < CantidadRafagas; j++) {
         System.out.println("Valor de Rafaga N" + (j + 1));
+        
         int tiempoRafaga = sc.nextInt();
-        p.incrementarTiempo(tiempoRafaga);
-        p.agregarTiempoProcesamiento(tiempoRafaga);
+        rafagas.add(tiempoRafaga);
+        tiempoTotal += tiempoRafaga;
       }
+
+      Proceso p = new Proceso(CantidadRafagas, tiempoDeLlegada, nombreProceso, tiempoTotal, 0, 0, rafagas, Estado.NUEVO);
+
       procesos.add(p);
+
+      procesosPorEjecutar.add(p);
     }
   }
 
