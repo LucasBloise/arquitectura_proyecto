@@ -4,11 +4,27 @@ import com.mycompany.Estado;
 import com.mycompany.proyecto.arq.Proceso;
 
 public class RutinasController {
-    int tiempo = 0;
+    private static int tiempo = 0;
 
     public static void ejecutarProcesos() {
+        boolean continuar = false;
         while (quedenProcesos()) {
-            
+            tiempo += 1;
+            for (Proceso proceso : ProcesoController.procesosPorEjecutar) {
+                if (proceso.getEstado() == Estado.NUEVO) {
+                    // grabar en table, le cambio el estado y continue
+                    if (proceso.getTiempoDeLlegada() >= tiempo) {
+                        continue;
+                    }
+                    GraficoController.grafico[6][tiempo] = "1P" + proceso.getNombreProceso();
+                    proceso.setEstado(Estado.LISTO);
+                    continuar = true;
+                }
+                if (continuar) {
+                    continue;
+                }
+            }
+
         }
     }
 
