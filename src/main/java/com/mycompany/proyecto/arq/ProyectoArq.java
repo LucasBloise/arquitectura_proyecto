@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Project/Maven2/JavaApp/src/main/java/${packagePath}/${mainClassName}.java to edit this template
  */
 package com.mycompany.proyecto.arq;
+
 import com.mycompany.proyecto.arq.Controllers.MenuController;
 
 /**
@@ -12,7 +13,11 @@ import com.mycompany.proyecto.arq.Controllers.MenuController;
 public class ProyectoArq {
 
     public static void main(String[] args) {
-        MenuController.mostrarMenu();
-        MenuController.seleccionarOpcion();
+
+        do {
+
+            MenuController.mostrarMenu();
+            MenuController.seleccionarOpcion();
+        } while (true);
     }
 }

@@ -27,6 +27,7 @@ public class MenuController {
 
     public static void seleccionarOpcion() {
         String opcionSeleccionada = sc.nextLine();
+
         switch (opcionSeleccionada) {
             case "1":
                 System.out.print("\033[H\033[2J");
@@ -41,6 +42,7 @@ public class MenuController {
                 }
                 break;
             case "3":
+                RutinasController.ejecutarProcesos();
                 // ejecutar jsf
                 break;
             case "4":

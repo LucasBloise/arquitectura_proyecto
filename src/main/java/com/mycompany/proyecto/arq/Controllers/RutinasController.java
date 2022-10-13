@@ -9,6 +9,8 @@ public class RutinasController {
     public static void ejecutarProcesos() {
         boolean continuar = false;
         while (quedenProcesos()) {
+            if (tiempo >= 100)
+                break;
             tiempo += 1;
             for (Proceso proceso : ProcesoController.procesosPorEjecutar) {
                 if (proceso.getEstado() == Estado.NUEVO) {
@@ -26,6 +28,7 @@ public class RutinasController {
             }
 
         }
+        GraficoController.imprimirTabla();
     }
 
     public static boolean quedenProcesos() {
