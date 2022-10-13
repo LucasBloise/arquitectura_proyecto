@@ -40,7 +40,7 @@ public class RutinasController {
             if (p.getEstado() != Estado.NUEVO ){
                 continue;
             }
-            if (p.getTiempoDeLlegada() >= tiempo) {
+            if (p.getTiempoDeLlegada() == tiempo) {
                 p.setEstado(Estado.LISTO);
                 GraficoController.grafico[5][tiempo] = "1P" + p.getNombreProceso();
                 debeContinuar = true;
