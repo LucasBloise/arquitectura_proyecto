@@ -15,6 +15,7 @@ public class MenuController {
     private static String opcionSeleccionada;
 
     public static void mostrarMenu() {
+        System.out.print("\033[H\033[2J");
         System.out.println("-----------------------------------");
         System.out.println("1 - Establecer tiempo entrada salida");
         System.out.println("2 - Cargar Procesos");
@@ -25,6 +26,7 @@ public class MenuController {
     }
 
     public static void seleccionarOpcion() {
+
         opcionSeleccionada = sc.nextLine();
         switch (opcionSeleccionada) {
             case "1":
@@ -41,12 +43,32 @@ public class MenuController {
             case "3":
                 // ejecutar jsf
                 System.out.print("\033[H\033[2J");
-                RutinasController.ejecutarProcesos();
-                System.out.print("Presiones cualquier tecla para continuar");
-                sc.nextLine();
+                if (!ProcesoController.procesos.isEmpty()) {
+                    RutinasController.ejecutarProcesos();
+                    System.out.print("Presiones cualquier tecla para continuar");
+                    sc.nextLine();
+
+                } else {
+                    System.out.print("\033[H\033[2J");
+                    System.out.println("No tienes procesos cargados");
+                    System.out.println("Presiona enter para volver al menu");
+                    sc.nextLine();
+                }
                 break;
+
             case "4":
                 // jejecutar jsf d
+                if (!ProcesoController.procesos.isEmpty()) {
+                    RutinasController.ejecutarProcesos();
+                    System.out.print("Presiones cualquier tecla para continuar");
+                    sc.nextLine();
+
+                } else {
+                    System.out.print("\033[H\033[2J");
+                    System.out.println("No tienes procesos cargados");
+                    System.out.println("Presiona enter para volver al menu");
+                    sc.nextLine();
+                }
                 break;
             default:
                 System.exit(0);
