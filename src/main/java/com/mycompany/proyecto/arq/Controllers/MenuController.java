@@ -5,6 +5,7 @@
 package com.mycompany.proyecto.arq.Controllers;
 
 import java.util.Scanner;
+import java.util.function.Function;
 
 import com.mycompany.proyecto.arq.Proceso;
 
@@ -37,9 +38,6 @@ public class MenuController {
             case "2":
                 System.out.println("Va a cargar procesos.");
                 ProcesoController.cargarProcesos();
-                for (Proceso proceso : ProcesoController.procesos) {
-                    proceso.imprimir();
-                }
                 break;
             case "3":
                 RutinasController.ejecutarProcesos();
@@ -49,7 +47,8 @@ public class MenuController {
                 // jejecutar jsf d
                 break;
             default:
-                throw new AssertionError();
+                System.exit(0);
+
         }
     }
 
