@@ -1,5 +1,7 @@
 package com.mycompany.proyecto.arq.Controllers;
 
+import javax.swing.*;
+
 public class GraficoController {
     public static String[][] grafico = new String[7][1000];
 
@@ -46,4 +48,5 @@ public class GraficoController {
 
         }
     }
+
 }

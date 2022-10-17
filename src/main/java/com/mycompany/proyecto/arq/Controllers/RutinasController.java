@@ -21,6 +21,7 @@ public class RutinasController {
                 continue;
             }
         }
+
         GraficoController.imprimirTabla();
     }
 
