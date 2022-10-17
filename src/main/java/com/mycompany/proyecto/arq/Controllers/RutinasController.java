@@ -22,7 +22,7 @@ public class RutinasController {
             }
         }
 
-        GraficoController.imprimirTabla();
+        GraficoController.imprimirTabla2();
     }
 
     public static boolean quedenProcesos() {
