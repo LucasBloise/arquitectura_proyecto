@@ -21,7 +21,8 @@ public class MenuController {
         System.out.println("2 - Cargar Procesos");
         System.out.println("3 - Mostrar grafica de JSF");
         System.out.println("4 - Mostrar grafica de JSF/D");
-        System.out.println("Pulse otra tecla para salir");
+        System.out.println("5 - Limpiar cola de Procesos");
+        System.out.println("Pulse enter para salir");
         System.out.println("-----------------------------------");
     }
 
@@ -69,6 +70,13 @@ public class MenuController {
                     System.out.println("Presiona enter para volver al menu");
                     sc.nextLine();
                 }
+                break;
+            case "5":
+                ProcesoController.procesos.clear();
+                ProcesoController.procesosPorEjecutar.clear();
+                System.out.println("Procesos eliminados");
+                System.out.println("Presiona enter para volver al menu");
+                sc.nextLine();
                 break;
             default:
                 System.exit(0);
