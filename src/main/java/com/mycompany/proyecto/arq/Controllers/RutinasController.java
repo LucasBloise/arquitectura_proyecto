@@ -1,27 +1,63 @@
 package com.mycompany.proyecto.arq.Controllers;
 
+import java.util.Scanner;
+
 import com.mycompany.proyecto.arq.Estado;
 import com.mycompany.proyecto.arq.Proceso;
 
 public class RutinasController {
     private static int tiempo = -1;
+    private static boolean debeContinuar = false;
+
+    private static void nuevoAListo(int tiempoActual){
+        for(Proceso p : ProcesoController.procesosPorEjecutar){
+            if(p.getEstado() == Estado.NUEVO){
+                GraficoController.grafico[5][tiempoActual] = "1P" + p.getNombreProceso();
+                p.setEstado(Estado.LISTO);
+                debeContinuar = true;
+                break;
+            }
+
+        }
+    }
+
+    private static void grabarTablas(int tiempo){
+        for (Proceso p : ProcesoController.procesosPorEjecutar) {
+            switch(p.getEstado()){
+                case LISTO:
+                    if(GraficoController.grafico[0][tiempo] == null) GraficoController.grafico[0][tiempo] = "";
+                    GraficoController.grafico[0][tiempo] += p.getNombreProceso() + "";
+                    break;
+            }
+        }
+    }
 
     public static void ejecutarProcesos() {
 
-        for (Proceso p : ProcesoController.procesosPorEjecutar) {
-            p.imprimir();
-        }
+        tiempo = 0;
+    
+       for(int i = 0; i < 99; i++){
+        grabarTablas(i);
 
-        while (quedenProcesos()) {
-
-            tiempo += 1;
+            debeContinuar = false;
             if (tiempo >= 100)
-                break;
+            break;
             if (procesoNuevo(tiempo)) {
                 continue;
             }
-        }
+            
+            nuevoAListo(i);
+            if(debeContinuar) continue;
+            
+            
+       }
+       System.out.println(
+        GraficoController.grafico
+    );
+            
+        
         GraficoController.imprimirTabla();
+        new Scanner(System.in).next();
     }
 
     public static boolean quedenProcesos() {

@@ -1,10 +1,14 @@
 package com.mycompany.proyecto.arq.Controllers;
 
 public class GraficoController {
-    public static String[][] grafico = new String[7][1000];
+    public static String[][] grafico = new String[7][99];
 
     public static void imprimirTabla() {
+        
         String posicion;
+        System.out.println(
+            GraficoController.grafico
+            );
         System.out.println(
                 "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         for (int i = 0; i < 7; i++) {
