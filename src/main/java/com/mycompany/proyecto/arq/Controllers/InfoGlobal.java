@@ -14,9 +14,9 @@ public class InfoGlobal {
         return tiempoEntradaSalida;
     }
 
-    public static void setTiempoEntradaSalida(int tiempoEntradaSalida) {
-        InfoGlobal.tiempoEntradaSalida = tiempoEntradaSalida;
+    public static void setTiempoEntradaSalida(int value) {
+        tiempoEntradaSalida = value;
     }
-    
+
     private static int tiempoEntradaSalida;
 }

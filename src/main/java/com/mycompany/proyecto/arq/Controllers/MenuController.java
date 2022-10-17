@@ -5,9 +5,6 @@
 package com.mycompany.proyecto.arq.Controllers;
 
 import java.util.Scanner;
-import java.util.function.Function;
-
-import com.mycompany.proyecto.arq.Proceso;
 
 /**
  *
@@ -15,6 +12,7 @@ import com.mycompany.proyecto.arq.Proceso;
  */
 public class MenuController {
     private static Scanner sc = new Scanner(System.in);
+    private static String opcionSeleccionada;
 
     public static void mostrarMenu() {
         System.out.println("-----------------------------------");
@@ -27,19 +25,21 @@ public class MenuController {
     }
 
     public static void seleccionarOpcion() {
-        String opcionSeleccionada = sc.nextLine();
-
+        opcionSeleccionada = sc.nextLine();
         switch (opcionSeleccionada) {
             case "1":
                 System.out.print("\033[H\033[2J");
                 System.out.println("Ingrese el tiempo de entrada-salida");
-                cargarTiempoES();
+                InfoGlobal.setTiempoEntradaSalida(sc.nextInt());
+                sc.nextLine();
                 break;
             case "2":
+                System.out.print("\033[H\033[2J");
                 System.out.println("Va a cargar procesos.");
                 ProcesoController.cargarProcesos();
                 break;
             case "3":
+                System.out.print("\033[H\033[2J");
                 RutinasController.ejecutarProcesos();
                 // ejecutar jsf
                 break;
@@ -52,8 +52,4 @@ public class MenuController {
         }
     }
 
-    public static void cargarTiempoES() {
-        int tiempEntradaSalida = sc.nextInt();
-        InfoGlobal.setTiempoEntradaSalida(tiempEntradaSalida);
-    }
 }

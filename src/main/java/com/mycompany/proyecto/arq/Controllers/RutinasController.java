@@ -11,11 +11,12 @@ public class RutinasController {
         for (Proceso p : ProcesoController.procesosPorEjecutar) {
             p.imprimir();
         }
-        
+
         while (quedenProcesos()) {
 
             tiempo += 1;
-            if (tiempo >= 100) break;
+            if (tiempo >= 100)
+                break;
             if (procesoNuevo(tiempo)) {
                 continue;
             }
@@ -34,10 +35,10 @@ public class RutinasController {
         return quedanProcesos;
     }
 
-    public static boolean procesoNuevo(int tiempo){
+    public static boolean procesoNuevo(int tiempo) {
         boolean debeContinuar = false;
-        for (Proceso p : ProcesoController.procesosPorEjecutar ){
-            if (p.getEstado() != Estado.NUEVO ){
+        for (Proceso p : ProcesoController.procesosPorEjecutar) {
+            if (p.getEstado() != Estado.NUEVO) {
                 continue;
             }
             if (p.getTiempoDeLlegada() == tiempo) {

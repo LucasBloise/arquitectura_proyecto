@@ -15,8 +15,8 @@ import com.mycompany.proyecto.arq.Proceso;
  * @author lucasbloise
  */
 public class ProcesoController {
-  static ArrayList<Proceso> procesos = new ArrayList();
-  static ArrayList<Proceso> procesosPorEjecutar = new ArrayList();
+  static ArrayList<Proceso> procesos = new ArrayList<Proceso>();
+  static ArrayList<Proceso> procesosPorEjecutar = new ArrayList<Proceso>();
   private static Scanner sc = new Scanner(System.in);
 
   public static void cargarProcesos() {
@@ -24,7 +24,7 @@ public class ProcesoController {
     for (int i = 0; i < 3; i++) {
 
       System.out.println("Proceso: " + (i + 1));
-      int nombreProceso = i+1;
+      int nombreProceso = i + 1;
       System.out.println("Cantidad de Rafagas de procesamiento");
       int CantidadRafagas = sc.nextInt();
       System.out.println("Tiempo de llegada del proceso");
@@ -35,13 +35,14 @@ public class ProcesoController {
 
       for (int j = 0; j < CantidadRafagas; j++) {
         System.out.println("Valor de Rafaga N" + (j + 1));
-        
+
         int tiempoRafaga = sc.nextInt();
         rafagas.add(tiempoRafaga);
         tiempoTotal += tiempoRafaga;
       }
 
-      Proceso p = new Proceso(CantidadRafagas, tiempoDeLlegada, nombreProceso, tiempoTotal, 0, 0, rafagas, Estado.NUEVO);
+      Proceso p = new Proceso(CantidadRafagas, tiempoDeLlegada, nombreProceso, tiempoTotal, 0, 0, rafagas,
+          Estado.NUEVO);
 
       procesos.add(p);
 
