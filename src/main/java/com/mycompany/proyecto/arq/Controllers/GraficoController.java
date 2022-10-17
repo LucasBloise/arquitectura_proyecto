@@ -49,20 +49,20 @@ public class GraficoController {
         }
     }
 
-    public static void imprimirTabla2() {
-        JFrame f;
-        f = new JFrame();
-        String data[][] = grafico;
-        String column[] = new String[grafico[0].length];
-        for (int i = 0; i < column.length; i++) {
-            column[i] = i + "";
-        }
-        JTable jt = new JTable(data, column);
-        jt.setBounds(50, 50, 400, 400);
-        JScrollPane sp = new JScrollPane(jt);
-        f.add(sp);
-        f.setSize(300, 400);
-        f.setVisible(true);
-    }
+    // public static void imprimirTabla2() {
+    // JFrame f;
+    // f = new JFrame();
+    // String data[][] = grafico;
+    // String column[] = new String[grafico[0].length];
+    // for (int i = 0; i < column.length; i++) {
+    // column[i] = i + "";
+    // }
+    // JTable jt = new JTable(data, column);
+    // jt.setBounds(50, 50, 400, 400);
+    // JScrollPane sp = new JScrollPane(jt);
+    // f.add(sp);
+    // f.setSize(300, 400);
+    // f.setVisible(true);
+    // }
 
 }
