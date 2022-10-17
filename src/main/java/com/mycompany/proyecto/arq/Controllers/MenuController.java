@@ -39,9 +39,11 @@ public class MenuController {
                 ProcesoController.cargarProcesos();
                 break;
             case "3":
+                // ejecutar jsf
                 System.out.print("\033[H\033[2J");
                 RutinasController.ejecutarProcesos();
-                // ejecutar jsf
+                System.out.print("Presiones cualquier tecla para continuar");
+                sc.nextLine();
                 break;
             case "4":
                 // jejecutar jsf d
