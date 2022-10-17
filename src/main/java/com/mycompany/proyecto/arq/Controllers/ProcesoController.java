@@ -7,7 +7,7 @@ package com.mycompany.proyecto.arq.Controllers;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import com.mycompany.Estado;
+import com.mycompany.proyecto.arq.Estado;
 import com.mycompany.proyecto.arq.Proceso;
 
 /**

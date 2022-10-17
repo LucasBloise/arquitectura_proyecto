@@ -1,6 +1,6 @@
 package com.mycompany.proyecto.arq.Controllers;
 
-import com.mycompany.Estado;
+import com.mycompany.proyecto.arq.Estado;
 import com.mycompany.proyecto.arq.Proceso;
 
 public class RutinasController {
