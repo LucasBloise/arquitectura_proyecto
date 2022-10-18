@@ -21,16 +21,18 @@ public class RutinasController {
         }
     }
 
-    private static void continuarEjecucion(){
-     Proceso proceso = null;
-     for(Proceso p : ProcesoController.procesosPorEjecutar)
-        if(p.getEstado() == Estado.EJECUCCION)
-            proceso = p;
-          if(proceso == null)return;
-     proceso.agregarTiempoProcesamiento(1);
 
-        
-     
+
+    private static void listoEjecucion(int tiempoActual){
+        for(Proceso p : ProcesoController.procesosPorEjecutar){
+            if(p.getEstado() == Estado.LISTO){
+                GraficoController.grafico[5][tiempoActual] = "2P" + p.getNombreProceso();
+                p.setEstado(Estado.EJECUCCION);
+                debeContinuar = true;
+                break;
+            }
+
+        }
     }
 
     private static void grabarTablas(int tiempo){
@@ -39,6 +41,17 @@ public class RutinasController {
                 case LISTO:
                     if(GraficoController.grafico[0][tiempo] == null) GraficoController.grafico[0][tiempo] = "";
                     GraficoController.grafico[0][tiempo] += p.getNombreProceso() + "";
+                    break;
+                case BLOQUEADO:
+                    break;
+                case EJECUCCION:
+                    GraficoController.grafico[p.getNombreProceso() + 1][tiempo] = " X ";
+                    break;
+                case NUEVO:
+                    break;
+                case TERMINADO:
+                    break;
+                default:
                     break;
             }
         }
@@ -59,6 +72,8 @@ public class RutinasController {
             }
             
             nuevoAListo(i);
+            if(debeContinuar) continue;
+            listoEjecucion(i);
             if(debeContinuar) continue;
             
             
