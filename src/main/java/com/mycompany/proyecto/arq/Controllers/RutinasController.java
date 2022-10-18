@@ -35,11 +35,19 @@ public class RutinasController {
         }
     }
 
-    private static boolean hayProcesosEnEjecucion(){
+    private static Proceso getProcesosEnEjecucion(){
         for(Proceso p : ProcesoController.procesosPorEjecutar)
             if(p.getEstado() == Estado.EJECUCCION)
-                return true;
-        return false;
+                return p;
+        return null;
+    }
+
+    private static void continuarEjecutando(int i){
+        if(getProcesosEnEjecucion() == null)return;
+        if(getProcesosEnEjecucion() != null)
+            getProcesosEnEjecucion().setTiempoEmpleado(1);
+        debeContinuar = true;
+        GraficoController.grafico [getProcesosEnEjecucion().getNombreProceso() + 1][i] = " X ";
     }
 
     private static void grabarTablas(int tiempo){
@@ -77,12 +85,13 @@ public class RutinasController {
             if (procesoNuevo(tiempo)) {
                 continue;
             }
-            
+            continuarEjecutando(i);
+            if(debeContinuar)continue;
             nuevoAListo(i);
             if(debeContinuar) continue;
             listoEjecucion(i);
             if(debeContinuar) continue;
-            
+                        
             
        }
        System.out.println(
