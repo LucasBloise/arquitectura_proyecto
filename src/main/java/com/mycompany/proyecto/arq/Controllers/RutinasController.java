@@ -21,6 +21,18 @@ public class RutinasController {
         }
     }
 
+    private static void continuarEjecucion(){
+     Proceso proceso = null;
+     for(Proceso p : ProcesoController.procesosPorEjecutar)
+        if(p.getEstado() == Estado.EJECUCCION)
+            proceso = p;
+          if(proceso == null)return;
+     proceso.agregarTiempoProcesamiento(1);
+
+        
+     
+    }
+
     private static void grabarTablas(int tiempo){
         for (Proceso p : ProcesoController.procesosPorEjecutar) {
             switch(p.getEstado()){
