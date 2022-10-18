@@ -35,6 +35,13 @@ public class RutinasController {
         }
     }
 
+    private static boolean hayProcesosEnEjecucion(){
+        for(Proceso p : ProcesoController.procesosPorEjecutar)
+            if(p.getEstado() == Estado.EJECUCCION)
+                return true;
+        return false;
+    }
+
     private static void grabarTablas(int tiempo){
         for (Proceso p : ProcesoController.procesosPorEjecutar) {
             switch(p.getEstado()){
