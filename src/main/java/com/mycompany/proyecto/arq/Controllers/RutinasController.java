@@ -82,13 +82,15 @@ public class RutinasController {
             debeContinuar = false;
             if (tiempo >= 100)
             break;
+            bloquearProceso(i);
+            if(debeContinuar)continue;
             if (procesoNuevo(tiempo)) {
                 continue;
             }
             continuarEjecutando(i);
             if(debeContinuar)continue;
             nuevoAListo(i);
-          if(debeContinuar) continue;
+            if(debeContinuar) continue;
             listoEjecucion(i);
             if(debeContinuar) continue;
                         
@@ -128,6 +130,23 @@ public class RutinasController {
             }
         }
         return debeContinuar;
+    }
+
+    private static Proceso getProcesoEnEjecucion(){
+        for(Proceso p : ProcesoController.procesosPorEjecutar)
+            if(p.getEstado() == Estado.EJECUCCION) return p;
+        
+        return null;
+    }
+
+    private static void bloquearProceso(int tiempo){
+        if(getProcesoEnEjecucion() == null) return;
+        if(getProcesoEnEjecucion().getTiempoEmpleado() +1 == getProcesoEnEjecucion().getRafagaActual()){
+            GraficoController.grafico[5][tiempo] = "4P" + getProcesoEnEjecucion().getNombreProceso();
+            debeContinuar = true;
+            getProcesoEnEjecucion().setEstado(Estado.BLOQUEADO);
+            return;
+        }
     }
 
 }

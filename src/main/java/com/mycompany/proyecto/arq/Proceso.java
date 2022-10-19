@@ -38,6 +38,10 @@ public class Proceso {
         return this.tiempoDeLlegada <= tiempo;
     }
 
+    public int getRafagaActual(){
+        return this.ciclosParaEjecutar.get(0);
+    }
+
     public static int getCantidadDeProcesos() {
         return cantidadDeProcesos;
     }
