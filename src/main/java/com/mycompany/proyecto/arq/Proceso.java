@@ -12,7 +12,6 @@ import java.util.ArrayList;
  */
 public class Proceso {
 
-    
     private static int cantidadDeProcesos = 0;
     private int cantidadRafagas;
     private int tiempoDeLlegada;
@@ -23,9 +22,8 @@ public class Proceso {
     private ArrayList<Integer> ciclosParaEjecutar = new ArrayList<Integer>();
     private Estado estado = Estado.NUEVO;
 
-    
-
-    public Proceso(int cantidadRafagas, int tiempoDeLlegada, int nombreProceso, int tiempoRequerido, int tiempoEmpleado, int tiempoBloqueado, ArrayList<Integer> ciclosParaEjecutar, Estado estado){
+    public Proceso(int cantidadRafagas, int tiempoDeLlegada, int nombreProceso, int tiempoRequerido, int tiempoEmpleado,
+            int tiempoBloqueado, ArrayList<Integer> ciclosParaEjecutar, Estado estado) {
         this.cantidadRafagas = cantidadRafagas;
         this.tiempoDeLlegada = tiempoDeLlegada;
         this.nombreProceso = nombreProceso;
@@ -34,6 +32,10 @@ public class Proceso {
         this.tiempoBloqueado = tiempoBloqueado;
         this.ciclosParaEjecutar = ciclosParaEjecutar;
         this.estado = estado;
+    }
+
+    public boolean haEntrado(int tiempo) {
+        return this.tiempoDeLlegada <= tiempo;
     }
 
     public static int getCantidadDeProcesos() {
@@ -123,5 +125,3 @@ public class Proceso {
     }
 
 }
-
-

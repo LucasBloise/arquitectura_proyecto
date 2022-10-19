@@ -88,7 +88,7 @@ public class RutinasController {
             continuarEjecutando(i);
             if(debeContinuar)continue;
             nuevoAListo(i);
-            if(debeContinuar) continue;
+          if(debeContinuar) continue;
             listoEjecucion(i);
             if(debeContinuar) continue;
                         
