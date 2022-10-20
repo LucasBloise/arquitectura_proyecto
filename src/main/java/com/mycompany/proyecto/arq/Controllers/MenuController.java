@@ -38,6 +38,8 @@ public class MenuController {
                 sc.nextLine();
                 break;
             case "2":
+                ProcesoController.procesos.clear();
+                ProcesoController.procesosPorEjecutar.clear();
                 System.out.print("\033[H\033[2J");
                 System.out.println("Va a cargar procesos.");
                 ProcesoController.cargarProcesos();
@@ -80,8 +82,11 @@ public class MenuController {
                 sc.nextLine();
                 break;
             case "6":
+                ProcesoController.procesos.clear();
+                ProcesoController.procesosPorEjecutar.clear();
                 System.out.print("\033[H\033[2J");
-                System.out.println("Va a cargar procesos automaticamente.");
+                System.out.println("Va a cargar procesos automaticamente presione enter.");
+                sc.nextLine();
                 ProcesoController.cargaAutomatica();
                 break;
             default:
