@@ -59,6 +59,7 @@ public class RutinasController {
                     GraficoController.grafico[0][tiempo] += p.getNombreProceso() + "";
                     break;
                 case BLOQUEADO:
+                GraficoController.grafico[1][tiempo] =  "P"+ p.getNombreProceso() ;
                     break;
                 case EJECUCCION:
                     GraficoController.grafico[p.getNombreProceso() + 1][tiempo] = " X ";

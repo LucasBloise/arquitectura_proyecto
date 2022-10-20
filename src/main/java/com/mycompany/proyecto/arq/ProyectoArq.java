@@ -15,4 +15,15 @@ public class ProyectoArq {
         } while (true);
     }
 
+/**
+ *TODO:
+ 1- Desbloquear Proceso
+ 2- Terminar procesos
+ 3- Elegir el proceso mas corto para ejecutar
+ 4- Solucionar ingreso de procesos nuevos
+ 5- Desalojo
+ 6- Tabla excel opcional
+ *
+ */
+
 }
