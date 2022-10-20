@@ -80,13 +80,16 @@ public class RutinasController {
 
         tiempo = 0;
 
-        for (i = 0; i < 99; i++) {
+        for (i = 0; terminarEjecuccion(); i++) {
             grabarTablas(i);
 
             debeContinuar = false;
             if (tiempo >= 100)
                 break;
             aumentarTiempoProcesosBloqueado();
+            terminarProceso();
+            if (debeContinuar)
+                continue;
             bloquearProceso(i);
             if (debeContinuar)
                 continue;
@@ -158,6 +161,7 @@ public class RutinasController {
             GraficoController.grafico[5][i] = "3P" + getProcesoEnEjecucion().getNombreProceso();
             debeContinuar = true;
             getProcesoEnEjecucion().reiniciarTiempoEjecuccion();
+            getProcesoEnEjecucion().reducirRafagaProcesamiento();
             getProcesoEnEjecucion().setEstado(Estado.BLOQUEADO);
             return;
         }
@@ -190,6 +194,31 @@ public class RutinasController {
 
         }
 
+    }
+
+    private static void terminarProceso() {
+        if (getProcesoEnEjecucion() == null)
+            return;
+        if (getProcesoEnEjecucion().getEstado() != Estado.EJECUCCION) {
+            return;
+        }
+        if (getProcesoEnEjecucion().deboTerminar()) {
+            GraficoController.grafico[5][tiempo] = "6P" + getProcesoEnEjecucion().getNombreProceso();
+            getProcesoEnEjecucion().setEstado(Estado.TERMINADO);
+            debeContinuar = true;
+            return;
+        }
+
+    }
+
+    private static boolean terminarEjecuccion() {
+        var aux = 0;
+        for (Proceso p : ProcesoController.procesosPorEjecutar) {
+            if (p.getEstado() == Estado.TERMINADO) {
+                aux += 1;
+            }
+        }
+        return aux == 3;
     }
 
 }

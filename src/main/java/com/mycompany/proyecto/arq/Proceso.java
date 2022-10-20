@@ -33,7 +33,6 @@ public class Proceso {
         this.tiempoEmpleado = tiempoEmpleado;
         this.tiempoBloqueado = tiempoBloqueado;
         this.ciclosParaEjecutar = ciclosParaEjecutar;
-        this.estado = estado;
     }
 
     public boolean haEntrado(int tiempo) {
@@ -54,6 +53,14 @@ public class Proceso {
 
     public void reiniciarTiempoEjecuccion() {
         this.tiempoEmpleado = 0;
+    }
+
+    public boolean deboTerminar() {
+        return this.ciclosParaEjecutar.size() == 1;
+    }
+
+    public void reducirRafagaProcesamiento() {
+        this.ciclosParaEjecutar.remove(0);
     }
 
     public int getRafagaActual() {

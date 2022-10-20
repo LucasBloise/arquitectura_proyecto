@@ -18,5 +18,5 @@ public class InfoGlobal {
         tiempoEntradaSalida = value;
     }
 
-    private static int tiempoEntradaSalida;
+    private static int tiempoEntradaSalida = 3;
 }
