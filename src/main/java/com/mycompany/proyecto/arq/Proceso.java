@@ -38,8 +38,13 @@ public class Proceso {
         return this.tiempoDeLlegada <= tiempo;
     }
 
-    public int getRafagaActual(){
+    public int getRafagaActual() {
         return this.ciclosParaEjecutar.get(0);
+    }
+
+    public void incrementarTiempoEmpleado() {
+        System.out.println("SE INCREMENTO EL TIEMPO");
+        this.tiempoEmpleado += 1;
     }
 
     public static int getCantidadDeProcesos() {
@@ -78,9 +83,7 @@ public class Proceso {
         return tiempoEmpleado;
     }
 
-    public void setTiempoEmpleado(int tiempoEmpleado) {
-        this.tiempoEmpleado = tiempoEmpleado;
-    }
+   
 
     public int getTiempoBloqueado() {
         return tiempoBloqueado;

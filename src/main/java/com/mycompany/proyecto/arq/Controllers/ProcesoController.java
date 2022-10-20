@@ -50,6 +50,35 @@ public class ProcesoController {
     }
   }
 
+  public static void cargaAutomatica() {
+
+    for (int i = 0; i < 3; i++) {
+
+      System.out.println("Proceso: " + (i + 1));
+      int nombreProceso = i + 1;
+      int CantidadRafagas = 2;
+
+      int tiempoDeLlegada = 2;
+
+      ArrayList<Integer> rafagas = new ArrayList<Integer>();
+      int tiempoTotal = 0;
+
+      for (int j = 0; j < CantidadRafagas; j++) {
+
+        int tiempoRafaga = 2;
+        rafagas.add(tiempoRafaga);
+        tiempoTotal += tiempoRafaga;
+      }
+
+      Proceso p = new Proceso(CantidadRafagas, tiempoDeLlegada, nombreProceso, tiempoTotal, 0, 0, rafagas,
+          Estado.NUEVO);
+
+      procesos.add(p);
+
+      procesosPorEjecutar.add(p);
+    }
+  }
+
   public static void cargarProcesosPorEjecutar() {
     procesosPorEjecutar = procesos;
   }
