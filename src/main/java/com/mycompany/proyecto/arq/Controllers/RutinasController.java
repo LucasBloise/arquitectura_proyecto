@@ -7,6 +7,7 @@ import com.mycompany.proyecto.arq.Proceso;
 
 public class RutinasController {
     private static int tiempo = -1;
+    private static int i = 0;
     private static boolean debeContinuar = false;
 
     private static void nuevoAListo(int tiempoActual){
@@ -76,7 +77,7 @@ public class RutinasController {
 
         tiempo = 0;
     
-       for(int i = 0; i < 99; i++){
+       for( i = 0; i < 99; i++){
         grabarTablas(i);
 
             debeContinuar = false;
@@ -142,7 +143,8 @@ public class RutinasController {
     private static void bloquearProceso(int tiempo){
         if(getProcesoEnEjecucion() == null) return;
         if(getProcesoEnEjecucion().getTiempoEmpleado() +1 == getProcesoEnEjecucion().getRafagaActual()){
-            GraficoController.grafico[5][tiempo] = "4P" + getProcesoEnEjecucion().getNombreProceso();
+            i++;
+            GraficoController.grafico[5][i] = "4P" + getProcesoEnEjecucion().getNombreProceso();
             debeContinuar = true;
             getProcesoEnEjecucion().setEstado(Estado.BLOQUEADO);
             return;
