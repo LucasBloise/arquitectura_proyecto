@@ -84,9 +84,6 @@ public class MenuController {
             case "6":
                 ProcesoController.procesos.clear();
                 ProcesoController.procesosPorEjecutar.clear();
-                System.out.print("\033[H\033[2J");
-                System.out.println("Va a cargar procesos automaticamente presione enter.");
-                sc.nextLine();
                 ProcesoController.cargaAutomatica();
                 break;
             default:

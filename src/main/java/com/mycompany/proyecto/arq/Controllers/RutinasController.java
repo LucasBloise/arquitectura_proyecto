@@ -45,7 +45,8 @@ public class RutinasController {
         if (getProcesosEnEjecucion() == null)
             return;
         if (getProcesosEnEjecucion() != null)
-            getProcesosEnEjecucion().setTiempoEmpleado(1);
+            getProcesosEnEjecucion().incrementarTiempoEmpleado();
+        System.out.println(getProcesoEnEjecucion().getTiempoEmpleado());
         debeContinuar = true;
         GraficoController.grafico[getProcesosEnEjecucion().getNombreProceso() + 1][i] = " X ";
     }
@@ -86,6 +87,7 @@ public class RutinasController {
             debeContinuar = false;
             if (tiempo >= 100)
                 break;
+
             bloquearProceso(i);
             if (debeContinuar)
                 continue;
@@ -103,10 +105,10 @@ public class RutinasController {
                 continue;
 
         }
-        System.out.println(
-                GraficoController.grafico);
+        System.out.println();
 
         GraficoController.imprimirTabla();
+        // GraficoController.imprimirTabla2();
         new Scanner(System.in).next();
     }
 
@@ -150,11 +152,24 @@ public class RutinasController {
             return;
         if (getProcesoEnEjecucion().getTiempoEmpleado() + 1 == getProcesoEnEjecucion().getRafagaActual()) {
             i++;
-            GraficoController.grafico[5][i] = "4P" + getProcesoEnEjecucion().getNombreProceso();
+            GraficoController.grafico[5][i] = "3P" + getProcesoEnEjecucion().getNombreProceso();
             debeContinuar = true;
             getProcesoEnEjecucion().setEstado(Estado.BLOQUEADO);
             return;
         }
+    }
+
+    private static void desbloquearProceso(int tiempo) {
+        if (getProcesoEnEjecucion() != null)
+            return;
+        if (getProcesoEnEjecucion().getEstado() == Estado.BLOQUEADO) {
+            i++;
+            GraficoController.grafico[5][i] = "4P" + getProcesoEnEjecucion().getNombreProceso();
+            debeContinuar = true;
+            getProcesoEnEjecucion().setEstado(Estado.LISTO);
+            return;
+        }
+
     }
 
 }
