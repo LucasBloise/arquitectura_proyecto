@@ -44,8 +44,7 @@ public class RutinasController {
     private static void continuarEjecutando(int i) {
         if (getProcesosEnEjecucion() == null)
             return;
-        if (getProcesosEnEjecucion() != null)
-            getProcesosEnEjecucion().incrementarTiempoEmpleado();
+        getProcesosEnEjecucion().incrementarTiempoEmpleado();
         System.out.println(getProcesoEnEjecucion().getTiempoEmpleado());
         debeContinuar = true;
         GraficoController.grafico[getProcesosEnEjecucion().getNombreProceso() + 1][i] = " X ";
@@ -87,14 +86,18 @@ public class RutinasController {
             debeContinuar = false;
             if (tiempo >= 100)
                 break;
-
+            aumentarTiempoProcesosBloqueado();
             bloquearProceso(i);
             if (debeContinuar)
                 continue;
             if (procesoNuevo(tiempo)) {
                 continue;
             }
+
             continuarEjecutando(i);
+            if (debeContinuar)
+                continue;
+            desbloquearProceso(i);
             if (debeContinuar)
                 continue;
             nuevoAListo(i);
@@ -154,6 +157,7 @@ public class RutinasController {
             i++;
             GraficoController.grafico[5][i] = "3P" + getProcesoEnEjecucion().getNombreProceso();
             debeContinuar = true;
+            getProcesoEnEjecucion().reiniciarTiempoEjecuccion();
             getProcesoEnEjecucion().setEstado(Estado.BLOQUEADO);
             return;
         }
@@ -162,12 +166,28 @@ public class RutinasController {
     private static void desbloquearProceso(int tiempo) {
         if (getProcesoEnEjecucion() != null)
             return;
-        if (getProcesoEnEjecucion().getEstado() == Estado.BLOQUEADO) {
-            i++;
-            GraficoController.grafico[5][i] = "4P" + getProcesoEnEjecucion().getNombreProceso();
-            debeContinuar = true;
-            getProcesoEnEjecucion().setEstado(Estado.LISTO);
-            return;
+        for (Proceso p : ProcesoController.procesosPorEjecutar) {
+            if (p.deboDesbloquear() && p.getEstado() == Estado.BLOQUEADO) {
+                i++;
+                p.reiniciarTiempoBloqueado();
+                System.out.println("ESTOY DESBLOQUEANDO" + tiempo);
+                GraficoController.grafico[5][tiempo] = "4P" + p.getNombreProceso();
+                p.setEstado(Estado.LISTO);
+                debeContinuar = true;
+                return;
+            }
+
+        }
+
+    }
+
+    private static void aumentarTiempoProcesosBloqueado() {
+        for (Proceso p : ProcesoController.procesosPorEjecutar) {
+            if (p.getEstado() == Estado.BLOQUEADO) {
+                p.incrementarTiempoBloqueado(tiempo);
+
+            }
+
         }
 
     }

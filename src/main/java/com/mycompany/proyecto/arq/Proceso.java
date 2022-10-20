@@ -6,6 +6,8 @@ package com.mycompany.proyecto.arq;
 
 import java.util.ArrayList;
 
+import com.mycompany.proyecto.arq.Controllers.InfoGlobal;
+
 /**
  *
  * @author lucasbloise
@@ -38,12 +40,28 @@ public class Proceso {
         return this.tiempoDeLlegada <= tiempo;
     }
 
+    public boolean deboDesbloquear() {
+        return InfoGlobal.getTiempoEntradaSalida() <= this.tiempoBloqueado;
+    }
+
+    public void incrementarTiempoBloqueado(int tiempo) {
+        this.tiempoBloqueado += 1;
+    }
+
+    public void reiniciarTiempoBloqueado() {
+        this.tiempoBloqueado = 0;
+    }
+
+    public void reiniciarTiempoEjecuccion() {
+        this.tiempoEmpleado = 0;
+    }
+
     public int getRafagaActual() {
         return this.ciclosParaEjecutar.get(0);
     }
 
     public void incrementarTiempoEmpleado() {
-        System.out.println("SE INCREMENTO EL TIEMPO");
+
         this.tiempoEmpleado += 1;
     }
 
@@ -82,8 +100,6 @@ public class Proceso {
     public int getTiempoEmpleado() {
         return tiempoEmpleado;
     }
-
-   
 
     public int getTiempoBloqueado() {
         return tiempoBloqueado;
