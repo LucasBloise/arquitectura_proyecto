@@ -56,10 +56,11 @@ public class Proceso {
     }
 
     public boolean deboTerminar() {
-        return this.ciclosParaEjecutar.size() == 1;
+        return this.ciclosParaEjecutar.size() == 0;
     }
 
     public void reducirRafagaProcesamiento() {
+        System.out.println(this.ciclosParaEjecutar.size());
         this.ciclosParaEjecutar.remove(0);
     }
 

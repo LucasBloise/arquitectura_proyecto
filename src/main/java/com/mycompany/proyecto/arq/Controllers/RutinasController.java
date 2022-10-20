@@ -7,7 +7,6 @@ import com.mycompany.proyecto.arq.Proceso;
 
 public class RutinasController {
     private static int tiempo = -1;
-    private static int i = 0;
     private static boolean debeContinuar = false;
 
     private static void nuevoAListo(int tiempoActual) {
@@ -41,13 +40,11 @@ public class RutinasController {
         return null;
     }
 
-    private static void continuarEjecutando(int i) {
-        if (getProcesosEnEjecucion() == null)
-            return;
+    private static void continuarEjecutando() {
+        if (getProcesosEnEjecucion() == null) return;
         getProcesosEnEjecucion().incrementarTiempoEmpleado();
-        System.out.println(getProcesoEnEjecucion().getTiempoEmpleado());
+        GraficoController.grafico[getProcesosEnEjecucion().getNombreProceso() + 1][tiempo] = " X ";
         debeContinuar = true;
-        GraficoController.grafico[getProcesosEnEjecucion().getNombreProceso() + 1][i] = " X ";
     }
 
     private static void grabarTablas(int tiempo) {
@@ -78,35 +75,32 @@ public class RutinasController {
 
     public static void ejecutarProcesos() {
 
-        tiempo = 0;
-
-        for (i = 0; terminarEjecuccion(); i++) {
-            grabarTablas(i);
-
+        while(!terminarEjecuccion()){
+            tiempo++;
             debeContinuar = false;
-            if (tiempo >= 100)
-                break;
+            grabarTablas(tiempo);
+            if (tiempo >= 100) break;
             aumentarTiempoProcesosBloqueado();
-            terminarProceso();
-            if (debeContinuar)
-                continue;
-            bloquearProceso(i);
-            if (debeContinuar)
-                continue;
-            if (procesoNuevo(tiempo)) {
-                continue;
-            }
 
-            continuarEjecutando(i);
+            terminarProceso();
+            if (debeContinuar) continue;
+
+            bloquearProceso();
+            if (debeContinuar) continue;
+
+            continuarEjecutando();
+            if (debeContinuar) continue;
+
+            if (procesoNuevo(tiempo)) continue;
+            
+
+            desbloquearProceso(tiempo);
             if (debeContinuar)
                 continue;
-            desbloquearProceso(i);
+            nuevoAListo(tiempo);
             if (debeContinuar)
                 continue;
-            nuevoAListo(i);
-            if (debeContinuar)
-                continue;
-            listoEjecucion(i);
+            listoEjecucion(tiempo);
             if (debeContinuar)
                 continue;
 
@@ -134,7 +128,7 @@ public class RutinasController {
         for (Proceso p : ProcesoController.procesosPorEjecutar) {
             if (p.getEstado() != Estado.NUEVO) {
                 continue;
-            }
+            } //TODO:algo uele mal
             if (p.getTiempoDeLlegada() == tiempo) {
                 p.setEstado(Estado.LISTO);
                 GraficoController.grafico[5][tiempo] = "1P" + p.getNombreProceso();
@@ -153,16 +147,16 @@ public class RutinasController {
         return null;
     }
 
-    private static void bloquearProceso(int tiempo) {
+    private static void bloquearProceso() {
         if (getProcesoEnEjecucion() == null)
             return;
         if (getProcesoEnEjecucion().getTiempoEmpleado() + 1 == getProcesoEnEjecucion().getRafagaActual()) {
-            i++;
-            GraficoController.grafico[5][i] = "3P" + getProcesoEnEjecucion().getNombreProceso();
-            debeContinuar = true;
             getProcesoEnEjecucion().reiniciarTiempoEjecuccion();
-            getProcesoEnEjecucion().reducirRafagaProcesamiento();
+            
+            tiempo++;
+            GraficoController.grafico[5][tiempo] = "3P" + getProcesoEnEjecucion().getNombreProceso();
             getProcesoEnEjecucion().setEstado(Estado.BLOQUEADO);
+            debeContinuar = true;
             return;
         }
     }
@@ -172,7 +166,7 @@ public class RutinasController {
             return;
         for (Proceso p : ProcesoController.procesosPorEjecutar) {
             if (p.deboDesbloquear() && p.getEstado() == Estado.BLOQUEADO) {
-                i++;
+                p.reducirRafagaProcesamiento();
                 p.reiniciarTiempoBloqueado();
                 System.out.println("ESTOY DESBLOQUEANDO" + tiempo);
                 GraficoController.grafico[5][tiempo] = "4P" + p.getNombreProceso();
@@ -197,12 +191,10 @@ public class RutinasController {
     }
 
     private static void terminarProceso() {
-        if (getProcesoEnEjecucion() == null)
-            return;
-        if (getProcesoEnEjecucion().getEstado() != Estado.EJECUCCION) {
-            return;
-        }
+        if (getProcesoEnEjecucion() == null) return;
+
         if (getProcesoEnEjecucion().deboTerminar()) {
+            tiempo++;
             GraficoController.grafico[5][tiempo] = "6P" + getProcesoEnEjecucion().getNombreProceso();
             getProcesoEnEjecucion().setEstado(Estado.TERMINADO);
             debeContinuar = true;
@@ -212,7 +204,7 @@ public class RutinasController {
     }
 
     private static boolean terminarEjecuccion() {
-        var aux = 0;
+        int aux = 0;
         for (Proceso p : ProcesoController.procesosPorEjecutar) {
             if (p.getEstado() == Estado.TERMINADO) {
                 aux += 1;
