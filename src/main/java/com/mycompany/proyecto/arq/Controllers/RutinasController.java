@@ -4,6 +4,8 @@ package com.mycompany.proyecto.arq.Controllers;
 import com.mycompany.proyecto.arq.Estado;
 import com.mycompany.proyecto.arq.Proceso;
 
+import java.util.ArrayList;
+
 public abstract class RutinasController {
 
   public static void ejecutarProcesos(boolean esJSFD) {
@@ -109,6 +111,8 @@ public abstract class RutinasController {
       if(getPrimerProcesoQueRequieraSerDesbloqueado() != null){
         Proceso p = getPrimerProcesoQueRequieraSerDesbloqueado();
         if(p == null) return;
+        ProcesoController.procesosPorEjecutar.remove(p);
+        ProcesoController.procesosPorEjecutar.add(p);
         GraficoController.grafico[5][Tiempo.tiempo] = "4P" + p.getNombreProceso();
         if(p.ciclosParaEjecutar.isEmpty()){
           GraficoController.grafico[5][Tiempo.tiempo] = "6P" + p.getNombreProceso();
@@ -121,13 +125,12 @@ public abstract class RutinasController {
  
       //Mandar procesos de listo a ejecucion
       if (hayProcesoEn(Estado.LISTO) || getPrimerProcesoEn(Estado.LISTO) != null) {
-        boolean hayProcesoParaEjecutar = false;
         Proceso proceso = null;
         for(Proceso p: ProcesoController.procesos){
           if(p.getEstado() == Estado.TERMINADO) continue;
           if(p.getEstado() != Estado.LISTO) continue;
           if(p.getEstado() != Estado.TERMINADO && p.getEstado() == Estado.LISTO){
-            proceso = p;
+            proceso = getProcesoMasCorto();
             break;
           }
         }
@@ -198,6 +201,37 @@ public abstract class RutinasController {
 
   public static boolean hayProcesosQueRequirenSerDesbloqueados(){
     return getPrimerProcesoQueRequieraSerDesbloqueado() != null;
+  }
+
+  public static Proceso getProcesoMasCorto(){
+    Proceso proceso = null;
+    int menorTiempoDeRafagaActual = Integer.MAX_VALUE;
+    int menorTiempoTotal = Integer.MAX_VALUE;
+    ArrayList procesosConElMismoTiempoDeEjecucion = new ArrayList();
+
+    // TODO: armar unalista conlosprocesos en listo
+    // TODO: ordenan la lista con el mas corto en rafaga actual
+    // TODO: Deberia preguntar si dos procesos tienen la misma duracion en la rafa actual si es asi, remover el proceso con el tiempo de ejeccion total nuevamente cakcylado
+
+
+    for(Proceso p : ProcesoController.procesosPorEjecutar){
+      if(p.getEstado() != Estado.LISTO) continue;
+      if(p.getRafagaActual() < menorTiempoDeRafagaActual) {
+        menorTiempoDeRafagaActual = p.getRafagaActual();
+      }
+    
+    }
+
+    for(Proceso p : ProcesoController.procesosPorEjecutar){
+      if(p.getEstado() != Estado.LISTO) continue;
+      if(menorTiempoDeRafagaActual == p.getRafagaActual()){
+        proceso = p;
+        break;
+      }
+    }
+
+    return proceso;
+
   }
 
 }
