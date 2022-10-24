@@ -2,8 +2,6 @@ package com.mycompany.proyecto.arq.Controllers;
 
 import javax.swing.*;
 
-import com.mycompany.proyecto.arq.Proceso;
-
 public class GraficoController {
     public static String[][] grafico = new String[7][99];
 

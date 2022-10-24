@@ -11,10 +11,12 @@ public abstract class RutinasController {
     for(Tiempo.tiempo = 0; Tiempo.tiempo < 35; Tiempo.tiempo++){
       //Para evitar desbordamientos
       if (Tiempo.tiempo == GraficoController.grafico[0].length) break;
-      if(Tiempo.tiempo == 16){
-        System.out.println(getPrimerProcesoEn(Estado.BLOQUEADO).deboDesbloquear());
-        System.out.println(getPrimerProcesoEn(Estado.BLOQUEADO).getTiempoBloqueado());
-      }
+     /*  if(Tiempo.tiempo == 16){
+         .println(getPrimerProcesoEn(Estado.BLOQUEADO).deboDesbloquear());
+         .println(getPrimerProcesoEn(Estado.BLOQUEADO).getTiempoBloqueado());
+      }*/
+
+
 
       incrementarTiempoBloqueado();
 
@@ -56,6 +58,9 @@ public abstract class RutinasController {
         getProcesoEnEjecucion().setEstado(Estado.LISTO);
         continue;
       }
+
+
+
       //Preguntamos si debemos bloquear el proceso en ejecucion
 
       if(hayProcesoEn(Estado.EJECUCCION) && getPrimerProcesoEn(Estado.EJECUCCION).deboTerminar()){
@@ -65,10 +70,21 @@ public abstract class RutinasController {
       }
 
       if(hayProcesoEn(Estado.EJECUCCION) && getPrimerProcesoEn(Estado.EJECUCCION).deboBloquear()){
-        GraficoController.grafico[5][Tiempo.tiempo] = "3P" + getPrimerProcesoEn(Estado.EJECUCCION).getNombreProceso();
-        getPrimerProcesoEn(Estado.EJECUCCION).reiniciarTiempoEjecuccion();
-        getPrimerProcesoEn(Estado.EJECUCCION).setEstado(Estado.BLOQUEADO);
-        continue;
+        Proceso p = getPrimerProcesoEn(Estado.EJECUCCION);
+        p.reducirRafagaProcesamiento();
+        if(p.ciclosParaEjecutar.isEmpty()) {
+          GraficoController.grafico[5][Tiempo.tiempo] = "6P" + p.getNombreProceso();
+          p.setEstado(Estado.TERMINADO);
+          continue;
+        }else if(!p.ciclosParaEjecutar.isEmpty()){
+          
+                  GraficoController.grafico[5][Tiempo.tiempo] = "3P" + p.getNombreProceso();
+                  p.reiniciarTiempoEjecuccion();
+                  p.setEstado(Estado.BLOQUEADO);
+                  continue;
+
+        }
+
       }
 
         
@@ -93,19 +109,31 @@ public abstract class RutinasController {
       if(getPrimerProcesoQueRequieraSerDesbloqueado() != null){
         Proceso p = getPrimerProcesoQueRequieraSerDesbloqueado();
         if(p == null) return;
-        
-        System.out.println(p);
         GraficoController.grafico[5][Tiempo.tiempo] = "4P" + p.getNombreProceso();
+        if(p.ciclosParaEjecutar.isEmpty()){
+          GraficoController.grafico[5][Tiempo.tiempo] = "6P" + p.getNombreProceso();
+          p.setEstado(Estado.TERMINADO);
+        }
         p.reiniciarTiempoBloqueado();
         p.setEstado(Estado.LISTO);
         continue;
       }
-
+ 
       //Mandar procesos de listo a ejecucion
-      if (hayProcesoEn(Estado.LISTO)) {
+      if (hayProcesoEn(Estado.LISTO) || getPrimerProcesoEn(Estado.LISTO) != null) {
+        boolean hayProcesoParaEjecutar = false;
+        Proceso proceso = null;
+        for(Proceso p: ProcesoController.procesos){
+          if(p.getEstado() == Estado.TERMINADO) continue;
+          if(p.getEstado() != Estado.LISTO) continue;
+          if(p.getEstado() != Estado.TERMINADO && p.getEstado() == Estado.LISTO){
+            proceso = p;
+            break;
+          }
+        }
           GraficoController.grafico[5][Tiempo.tiempo] =
-            "2P" + getPrimerProcesoEn(Estado.LISTO).getNombreProceso();
-        getPrimerProcesoEn(Estado.LISTO).setEstado(Estado.EJECUCCION); 
+            "2P" + proceso.getNombreProceso();
+        proceso.setEstado(Estado.EJECUCCION); 
         continue;
       }
     }
@@ -134,8 +162,14 @@ public abstract class RutinasController {
   }
 
   public static boolean hayProcesoEn(Estado setState){
-    for(Proceso p : ProcesoController.procesosPorEjecutar)
-        if(p.getEstado() == setState) return true; return false;
+    boolean hayProceso = false;
+    for(Proceso p : ProcesoController.procesosPorEjecutar){
+      if(p.getEstado() == setState) {
+        hayProceso = true;
+        break;
+      }
+    }
+    return hayProceso;
   }
 
   public static Proceso getPrimerProcesoEn(Estado forSetState){

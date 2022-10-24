@@ -21,7 +21,7 @@ public class Proceso {
     private int tiempoRequerido = 0;
     private int tiempoEmpleado = 0;
     private int tiempoBloqueado = 0;
-    private ArrayList<Integer> ciclosParaEjecutar = new ArrayList<Integer>();
+    public ArrayList<Integer> ciclosParaEjecutar = new ArrayList<Integer>();
     private Estado estado = Estado.NUEVO;
 
     public Proceso(int cantidadRafagas, int tiempoDeLlegada, int nombreProceso, int tiempoRequerido, int tiempoEmpleado,
@@ -56,11 +56,10 @@ public class Proceso {
     }
 
     public boolean deboTerminar() {
-        return this.ciclosParaEjecutar.size() == 1 && this.ciclosParaEjecutar.get(0) >= this.tiempoEmpleado;
+        return this.ciclosParaEjecutar.size() == 0 ;
     }
 
     public void reducirRafagaProcesamiento() {
-        System.out.println(this.ciclosParaEjecutar.size());
         this.ciclosParaEjecutar.remove(0);
     }
 
@@ -165,7 +164,7 @@ public class Proceso {
 
     @Override
     public String toString(){
-        return "{" + " nombre:  "  + this.nombreProceso + "\n tiempoBloqueado: " + this.tiempoBloqueado + "}";
+        return "{\n" + " nombre:  "  + this.nombreProceso + "\n tiempoBloqueado: " + this.tiempoBloqueado +  "\n rafagas: " + this.ciclosParaEjecutar + "\n tiempoDeEjecucion: " + this.tiempoEmpleado + "\n estado: " + this.estado + "\n}";
     }
 
 }
