@@ -1,216 +1,151 @@
 package com.mycompany.proyecto.arq.Controllers;
 
-import java.util.Scanner;
 
 import com.mycompany.proyecto.arq.Estado;
 import com.mycompany.proyecto.arq.Proceso;
 
-public class RutinasController {
-    private static int tiempo = -1;
-    private static boolean debeContinuar = false;
+public abstract class RutinasController {
 
-    private static void nuevoAListo(int tiempoActual) {
-        for (Proceso p : ProcesoController.procesosPorEjecutar) {
-            if (p.getEstado() == Estado.NUEVO) {
-                GraficoController.grafico[5][tiempoActual] = "1P" + p.getNombreProceso();
-                p.setEstado(Estado.LISTO);
-                debeContinuar = true;
-                break;
-            }
+  public static void ejecutarProcesos(boolean esJSFD) {
 
+    for(Tiempo.tiempo = 0; Tiempo.tiempo < 35; Tiempo.tiempo++){
+      //Para evitar desbordamientos
+      if (Tiempo.tiempo == GraficoController.grafico[0].length) break;
+      if(Tiempo.tiempo == 16){
+        System.out.println(getPrimerProcesoEn(Estado.BLOQUEADO).deboDesbloquear());
+        System.out.println(getPrimerProcesoEn(Estado.BLOQUEADO).getTiempoBloqueado());
+      }
+
+      incrementarTiempoBloqueado();
+
+      //Cargamos procesos a nuevo
+      
+
+      //Grabar datos previos en la tabla
+      //GraficoController.grabarEnTabla(); TODO:
+
+      String celda = "";
+      for(Proceso p : ProcesoController.procesosPorEjecutar){
+        if(p.getEstado() == Estado.LISTO){
+            celda += p.getNombreProceso();
+            GraficoController.grafico[0][Tiempo.tiempo ] = celda;
+        }
+      }
+      celda = "";
+      for(Proceso p : ProcesoController.procesosPorEjecutar){
+        if(p.getEstado() == Estado.BLOQUEADO){
+            celda += p.getNombreProceso();
+            GraficoController.grafico[1][Tiempo.tiempo ] = celda;
+        }
+      }
+
+      //Incrementar tiempo en bloqueo
+
+    
+      
+
+      if (
+        esJSFD &&
+        hayProcesoEn(Estado.NUEVO) &&
+        hayProcesoEnEjecucion() &&
+        getPrimerProcesoEn(Estado.NUEVO).getTiempoRequerido() <
+        getProcesoEnEjecucion().getTiempoRequerido()
+      ) {
+        GraficoController.grafico[5][Tiempo.tiempo] =
+          "5P" + getProcesoEnEjecucion().getNombreProceso();
+        getProcesoEnEjecucion().setEstado(Estado.LISTO);
+        continue;
+      }
+      //Preguntamos si debemos bloquear el proceso en ejecucion
+
+      if(hayProcesoEn(Estado.EJECUCCION) && getPrimerProcesoEn(Estado.EJECUCCION).deboTerminar()){
+        GraficoController.grafico[5][Tiempo.tiempo] = "6P" + getPrimerProcesoEn(Estado.EJECUCCION).getNombreProceso();
+        getPrimerProcesoEn(Estado.EJECUCCION).setEstado(Estado.TERMINADO);
+        continue;
+      }
+
+      if(hayProcesoEn(Estado.EJECUCCION) && getPrimerProcesoEn(Estado.EJECUCCION).deboBloquear()){
+        GraficoController.grafico[5][Tiempo.tiempo] = "3P" + getPrimerProcesoEn(Estado.EJECUCCION).getNombreProceso();
+        getPrimerProcesoEn(Estado.EJECUCCION).reiniciarTiempoEjecuccion();
+        getPrimerProcesoEn(Estado.EJECUCCION).setEstado(Estado.BLOQUEADO);
+        continue;
+      }
+
+        
+ 
+      //Ejecutar mi proceso si no require ser bloqueado
+      if (hayProcesoEnEjecucion()) {
+        GraficoController.grafico[getProcesoEnEjecucion().getNombreProceso() +
+          1][Tiempo.tiempo] =
+          " X ";
+          getProcesoEnEjecucion().incrementarTiempoEmpleado();
+        continue;
+      }
+
+      //Cargar procesos
+      if (hayProcesoEn(Estado.NUEVO)) {
+        GraficoController.grafico[5][Tiempo.tiempo] =
+          "1P" + getPrimerProcesoEn(Estado.NUEVO).getNombreProceso();
+        getPrimerProcesoEn(Estado.NUEVO).setEstado(Estado.LISTO);
+        continue;
+      }
+
+      
+
+      if (hayProcesoEn(Estado.BLOQUEADO) && getPrimerProcesoEn(Estado.BLOQUEADO).deboDesbloquear()) {
+        GraficoController.grafico[5][Tiempo.tiempo] = "4P" + getPrimerProcesoEn(Estado.BLOQUEADO).getNombreProceso();
+        getPrimerProcesoEn(Estado.BLOQUEADO).reiniciarTiempoBloqueado();
+        getPrimerProcesoEn(Estado.BLOQUEADO).setEstado(Estado.LISTO);
+        continue;
+      }
+
+      //Mandar procesos de listo a ejecucion
+      if (hayProcesoEn(Estado.LISTO)) {
+          GraficoController.grafico[5][Tiempo.tiempo] =
+            "2P" + getPrimerProcesoEn(Estado.LISTO).getNombreProceso();
+        getPrimerProcesoEn(Estado.LISTO).setEstado(Estado.EJECUCCION); 
+        continue;
+      }
+    }
+    GraficoController.imprimirTabla();
+    Tiempo.tiempo = 0;
+  }
+
+  public static boolean hayProcesoEnEjecucion(){
+    return getProcesoEnEjecucion() != null;
+  } 
+
+  public static Proceso getProcesoEnEjecucion(){
+    Proceso proceso = null;
+    for(Proceso p : ProcesoController.procesosPorEjecutar){
+        if(p.getEstado() == Estado.EJECUCCION)proceso = p;
+    }
+    return proceso;
+  }
+
+  public static void incrementarTiempoBloqueado(){
+    for(Proceso p : ProcesoController.procesosPorEjecutar){
+        if(p.getEstado() == Estado.BLOQUEADO){
+            p.incrementarTiempoBloqueado();
         }
     }
+  }
 
-    private static void listoEjecucion(int tiempoActual) {
-        for (Proceso p : ProcesoController.procesosPorEjecutar) {
-            if (p.getEstado() == Estado.LISTO) {
-                GraficoController.grafico[5][tiempoActual] = "2P" + p.getNombreProceso();
-                p.setEstado(Estado.EJECUCCION);
-                debeContinuar = true;
-                break;
-            }
+  public static boolean hayProcesoEn(Estado setState){
+    for(Proceso p : ProcesoController.procesosPorEjecutar)
+        if(p.getEstado() == setState) return true; return false;
+  }
 
+  public static Proceso getPrimerProcesoEn(Estado forSetState){
+    Proceso proceso = null;
+
+    for(Proceso p : ProcesoController.procesosPorEjecutar)
+        if(p.getEstado() == forSetState){
+            proceso = p; 
+            break;
         }
-    }
-
-    private static Proceso getProcesosEnEjecucion() {
-        for (Proceso p : ProcesoController.procesosPorEjecutar)
-            if (p.getEstado() == Estado.EJECUCCION)
-                return p;
-        return null;
-    }
-
-    private static void continuarEjecutando() {
-        if (getProcesosEnEjecucion() == null) return;
-        getProcesosEnEjecucion().incrementarTiempoEmpleado();
-        GraficoController.grafico[getProcesosEnEjecucion().getNombreProceso() + 1][tiempo] = " X ";
-        debeContinuar = true;
-    }
-
-    private static void grabarTablas(int tiempo) {
-        for (Proceso p : ProcesoController.procesosPorEjecutar) {
-            switch (p.getEstado()) {
-                case LISTO:
-                    if (GraficoController.grafico[0][tiempo] == null)
-                        GraficoController.grafico[0][tiempo] = "";
-                    GraficoController.grafico[0][tiempo] += p.getNombreProceso() + "";
-                    break;
-                case BLOQUEADO:
-                    if (GraficoController.grafico[1][tiempo] == null)
-                        GraficoController.grafico[1][tiempo] = "";
-                    GraficoController.grafico[1][tiempo] += "" + p.getNombreProceso();
-                    break;
-                case EJECUCCION:
-                    GraficoController.grafico[p.getNombreProceso() + 1][tiempo] = " X ";
-                    break;
-                case NUEVO:
-                    break;
-                case TERMINADO:
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    public static void ejecutarProcesos() {
-
-        while(!terminarEjecuccion()){
-            tiempo++;
-            debeContinuar = false;
-            grabarTablas(tiempo);
-            if (tiempo >= 100) break;
-            aumentarTiempoProcesosBloqueado();
-
-            terminarProceso();
-            if (debeContinuar) continue;
-
-            bloquearProceso();
-            if (debeContinuar) continue;
-
-            continuarEjecutando();
-            if (debeContinuar) continue;
-
-            if (procesoNuevo(tiempo)) continue;
-            
-
-            desbloquearProceso(tiempo);
-            if (debeContinuar)
-                continue;
-            nuevoAListo(tiempo);
-            if (debeContinuar)
-                continue;
-            listoEjecucion(tiempo);
-            if (debeContinuar)
-                continue;
-
-        }
-        System.out.println();
-
-        GraficoController.imprimirTabla();
-        // GraficoController.imprimirTabla2();
-        new Scanner(System.in).next();
-    }
-
-    public static boolean quedenProcesos() {
-        boolean quedanProcesos = true;
-        for (Proceso proceso : ProcesoController.procesosPorEjecutar) {
-            if (proceso.getEstado() == Estado.TERMINADO) {
-                quedanProcesos = false;
-                break;
-            }
-        }
-        return quedanProcesos;
-    }
-
-    public static boolean procesoNuevo(int tiempo) {
-        boolean debeContinuar = false;
-        for (Proceso p : ProcesoController.procesosPorEjecutar) {
-            if (p.getEstado() != Estado.NUEVO) {
-                continue;
-            } //TODO:algo uele mal
-            if (p.getTiempoDeLlegada() == tiempo) {
-                p.setEstado(Estado.LISTO);
-                GraficoController.grafico[5][tiempo] = "1P" + p.getNombreProceso();
-                debeContinuar = true;
-                break;
-            }
-        }
-        return debeContinuar;
-    }
-
-    private static Proceso getProcesoEnEjecucion() {
-        for (Proceso p : ProcesoController.procesosPorEjecutar)
-            if (p.getEstado() == Estado.EJECUCCION)
-                return p;
-
-        return null;
-    }
-
-    private static void bloquearProceso() {
-        if (getProcesoEnEjecucion() == null)
-            return;
-        if (getProcesoEnEjecucion().getTiempoEmpleado() + 1 == getProcesoEnEjecucion().getRafagaActual()) {
-            getProcesoEnEjecucion().reiniciarTiempoEjecuccion();
-            
-            tiempo++;
-            GraficoController.grafico[5][tiempo] = "3P" + getProcesoEnEjecucion().getNombreProceso();
-            getProcesoEnEjecucion().setEstado(Estado.BLOQUEADO);
-            debeContinuar = true;
-            return;
-        }
-    }
-
-    private static void desbloquearProceso(int tiempo) {
-        if (getProcesoEnEjecucion() != null)
-            return;
-        for (Proceso p : ProcesoController.procesosPorEjecutar) {
-            if (p.deboDesbloquear() && p.getEstado() == Estado.BLOQUEADO) {
-                p.reducirRafagaProcesamiento();
-                p.reiniciarTiempoBloqueado();
-                System.out.println("ESTOY DESBLOQUEANDO" + tiempo);
-                GraficoController.grafico[5][tiempo] = "4P" + p.getNombreProceso();
-                p.setEstado(Estado.LISTO);
-                debeContinuar = true;
-                return;
-            }
-
-        }
-
-    }
-
-    private static void aumentarTiempoProcesosBloqueado() {
-        for (Proceso p : ProcesoController.procesosPorEjecutar) {
-            if (p.getEstado() == Estado.BLOQUEADO) {
-                p.incrementarTiempoBloqueado(tiempo);
-
-            }
-
-        }
-
-    }
-
-    private static void terminarProceso() {
-        if (getProcesoEnEjecucion() == null) return;
-
-        if (getProcesoEnEjecucion().deboTerminar()) {
-            tiempo++;
-            GraficoController.grafico[5][tiempo] = "6P" + getProcesoEnEjecucion().getNombreProceso();
-            getProcesoEnEjecucion().setEstado(Estado.TERMINADO);
-            debeContinuar = true;
-            return;
-        }
-
-    }
-
-    private static boolean terminarEjecuccion() {
-        int aux = 0;
-        for (Proceso p : ProcesoController.procesosPorEjecutar) {
-            if (p.getEstado() == Estado.TERMINADO) {
-                aux += 1;
-            }
-        }
-        return aux == 3;
-    }
+        return proceso;
+  }
+  
 
 }

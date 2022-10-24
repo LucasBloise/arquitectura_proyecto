@@ -40,10 +40,10 @@ public class Proceso {
     }
 
     public boolean deboDesbloquear() {
-        return InfoGlobal.getTiempoEntradaSalida() <= this.tiempoBloqueado;
+        return this.tiempoBloqueado >= 3;
     }
 
-    public void incrementarTiempoBloqueado(int tiempo) {
+    public void incrementarTiempoBloqueado() {
         this.tiempoBloqueado += 1;
     }
 
@@ -56,7 +56,7 @@ public class Proceso {
     }
 
     public boolean deboTerminar() {
-        return this.ciclosParaEjecutar.size() == 0;
+        return this.ciclosParaEjecutar.size() == 1 && this.ciclosParaEjecutar.get(0) >= this.tiempoEmpleado;
     }
 
     public void reducirRafagaProcesamiento() {
@@ -77,6 +77,10 @@ public class Proceso {
         return cantidadDeProcesos;
     }
 
+    public boolean deboBloquear(){
+        return this.estado == Estado.EJECUCCION && this.tiempoEmpleado >= this.ciclosParaEjecutar.get(0);
+    }
+
     public static void setCantidadDeProcesos(int cantidadDeProcesos) {
         Proceso.cantidadDeProcesos = cantidadDeProcesos;
     }
@@ -87,6 +91,10 @@ public class Proceso {
 
     public void setCantidadRafagas(int cantidadRafagas) {
         this.cantidadRafagas = cantidadRafagas;
+    }
+
+    public void reiniciarTiempoEnEjecucion(){
+        this.tiempoEmpleado = 0;
     }
 
     public int getTiempoDeLlegada() {
