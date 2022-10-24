@@ -90,12 +90,14 @@ public abstract class RutinasController {
         continue;
       }
 
-      
-
-      if (hayProcesoEn(Estado.BLOQUEADO) && getPrimerProcesoEn(Estado.BLOQUEADO).deboDesbloquear()) {
-        GraficoController.grafico[5][Tiempo.tiempo] = "4P" + getPrimerProcesoEn(Estado.BLOQUEADO).getNombreProceso();
-        getPrimerProcesoEn(Estado.BLOQUEADO).reiniciarTiempoBloqueado();
-        getPrimerProcesoEn(Estado.BLOQUEADO).setEstado(Estado.LISTO);
+      if(getPrimerProcesoQueRequieraSerDesbloqueado() != null){
+        Proceso p = getPrimerProcesoQueRequieraSerDesbloqueado();
+        if(p == null) return;
+        
+        System.out.println(p);
+        GraficoController.grafico[5][Tiempo.tiempo] = "4P" + p.getNombreProceso();
+        p.reiniciarTiempoBloqueado();
+        p.setEstado(Estado.LISTO);
         continue;
       }
 
@@ -146,6 +148,22 @@ public abstract class RutinasController {
         }
         return proceso;
   }
-  
+
+  public static Proceso getPrimerProcesoQueRequieraSerDesbloqueado(){
+    Proceso proceso = null;
+
+    for(Proceso p : ProcesoController.procesosPorEjecutar){
+        if(p.getEstado() != Estado.BLOQUEADO) continue;
+        if(p.deboDesbloquear()){
+            proceso = p;
+            break;
+        } 
+    }
+    return proceso;
+  }
+
+  public static boolean hayProcesosQueRequirenSerDesbloqueados(){
+    return getPrimerProcesoQueRequieraSerDesbloqueado() != null;
+  }
 
 }

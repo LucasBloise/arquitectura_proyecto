@@ -163,4 +163,9 @@ public class Proceso {
         System.out.println("CantidadRafagas" + this.cantidadRafagas);
     }
 
+    @Override
+    public String toString(){
+        return "{" + " nombre:  "  + this.nombreProceso + "\n tiempoBloqueado: " + this.tiempoBloqueado + "}";
+    }
+
 }
