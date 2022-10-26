@@ -84,7 +84,10 @@ public class MenuController {
                 break;
             case "6":
                 if (!ProcesoController.procesos.isEmpty()) {
-                    // mostrar comparativa
+                    ComparativaController.imprimirGrafica = false;
+                    ComparativaController.mostrarComparativa();
+                    System.out.print("Presiones cualquier tecla para continuar");
+                    sc.nextLine();
 
                 } else {
                     System.out.print("\033[H\033[2J");

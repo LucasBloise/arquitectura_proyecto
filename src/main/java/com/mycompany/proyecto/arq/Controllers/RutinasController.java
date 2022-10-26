@@ -1,6 +1,5 @@
 package com.mycompany.proyecto.arq.Controllers;
 
-
 import com.mycompany.proyecto.arq.Estado;
 import com.mycompany.proyecto.arq.Proceso;
 
@@ -10,111 +9,99 @@ public abstract class RutinasController {
 
   public static void ejecutarProcesos(boolean esJSFD) {
 
-    for(Tiempo.tiempo = 0; Tiempo.tiempo < 35; Tiempo.tiempo++){
-      //Para evitar desbordamientos
-      if (Tiempo.tiempo == GraficoController.grafico[0].length) break;
-     /*  if(Tiempo.tiempo == 16){
-         .println(getPrimerProcesoEn(Estado.BLOQUEADO).deboDesbloquear());
-         .println(getPrimerProcesoEn(Estado.BLOQUEADO).getTiempoBloqueado());
-      }*/
-
-
+    for (Tiempo.tiempo = 0; Tiempo.tiempo < 35; Tiempo.tiempo++) {
+      // Para evitar desbordamientos
+      if (Tiempo.tiempo == GraficoController.grafico[0].length)
+        break;
+      /*
+       * if(Tiempo.tiempo == 16){
+       * .println(getPrimerProcesoEn(Estado.BLOQUEADO).deboDesbloquear());
+       * .println(getPrimerProcesoEn(Estado.BLOQUEADO).getTiempoBloqueado());
+       * }
+       */
 
       incrementarTiempoBloqueado();
 
-      //Cargamos procesos a nuevo
-      
+      // Cargamos procesos a nuevo
 
-      //Grabar datos previos en la tabla
-      //GraficoController.grabarEnTabla(); TODO:
+      // Grabar datos previos en la tabla
+      // GraficoController.grabarEnTabla(); TODO:
 
       String celda = "";
-      for(Proceso p : ProcesoController.procesosPorEjecutar){
-        if(p.getEstado() == Estado.LISTO){
-            celda += p.getNombreProceso();
-            GraficoController.grafico[0][Tiempo.tiempo ] = celda;
+      for (Proceso p : ProcesoController.procesosPorEjecutar) {
+        if (p.getEstado() == Estado.LISTO) {
+          celda += p.getNombreProceso();
+          GraficoController.grafico[0][Tiempo.tiempo] = celda;
         }
       }
       celda = "";
-      for(Proceso p : ProcesoController.procesosPorEjecutar){
-        if(p.getEstado() == Estado.BLOQUEADO){
-            celda += p.getNombreProceso();
-            GraficoController.grafico[1][Tiempo.tiempo ] = celda;
+      for (Proceso p : ProcesoController.procesosPorEjecutar) {
+        if (p.getEstado() == Estado.BLOQUEADO) {
+          celda += p.getNombreProceso();
+          GraficoController.grafico[1][Tiempo.tiempo] = celda;
         }
       }
 
-      //Incrementar tiempo en bloqueo
+      // Incrementar tiempo en bloqueo
 
-    
-      
-
-      if (
-        esJSFD &&
-        hayProcesoEn(Estado.NUEVO) &&
-        hayProcesoEnEjecucion() &&
-        getPrimerProcesoEn(Estado.NUEVO).getTiempoRequerido() <
-        getProcesoEnEjecucion().getTiempoRequerido()
-      ) {
-        GraficoController.grafico[5][Tiempo.tiempo] =
-          "5P" + getProcesoEnEjecucion().getNombreProceso();
+      if (esJSFD &&
+          hayProcesoEn(Estado.NUEVO) &&
+          hayProcesoEnEjecucion() &&
+          getPrimerProcesoEn(Estado.NUEVO).getTiempoRequerido() < getProcesoEnEjecucion().getTiempoRequerido()) {
+        GraficoController.grafico[5][Tiempo.tiempo] = "5P" + getProcesoEnEjecucion().getNombreProceso();
         getProcesoEnEjecucion().setEstado(Estado.LISTO);
         continue;
       }
 
+      // Preguntamos si debemos bloquear el proceso en ejecucion
 
-
-      //Preguntamos si debemos bloquear el proceso en ejecucion
-
-      if(hayProcesoEn(Estado.EJECUCCION) && getPrimerProcesoEn(Estado.EJECUCCION).deboTerminar()){
+      if (hayProcesoEn(Estado.EJECUCCION) && getPrimerProcesoEn(Estado.EJECUCCION).deboTerminar()) {
         GraficoController.grafico[5][Tiempo.tiempo] = "6P" + getPrimerProcesoEn(Estado.EJECUCCION).getNombreProceso();
         getPrimerProcesoEn(Estado.EJECUCCION).setEstado(Estado.TERMINADO);
         continue;
       }
 
-      if(hayProcesoEn(Estado.EJECUCCION) && getPrimerProcesoEn(Estado.EJECUCCION).deboBloquear()){
+      if (hayProcesoEn(Estado.EJECUCCION) && getPrimerProcesoEn(Estado.EJECUCCION).deboBloquear()) {
         Proceso p = getPrimerProcesoEn(Estado.EJECUCCION);
         p.reducirRafagaProcesamiento();
-        if(p.ciclosParaEjecutar.isEmpty()) {
+        if (p.ciclosParaEjecutar.isEmpty()) {
           GraficoController.grafico[5][Tiempo.tiempo] = "6P" + p.getNombreProceso();
           p.setEstado(Estado.TERMINADO);
           continue;
-        }else if(!p.ciclosParaEjecutar.isEmpty()){
-          
-                  GraficoController.grafico[5][Tiempo.tiempo] = "3P" + p.getNombreProceso();
-                  p.reiniciarTiempoEjecuccion();
-                  p.setEstado(Estado.BLOQUEADO);
-                  continue;
+        } else if (!p.ciclosParaEjecutar.isEmpty()) {
+
+          GraficoController.grafico[5][Tiempo.tiempo] = "3P" + p.getNombreProceso();
+          p.reiniciarTiempoEjecuccion();
+          p.setEstado(Estado.BLOQUEADO);
+          continue;
 
         }
 
       }
 
-        
- 
-      //Ejecutar mi proceso si no require ser bloqueado
+      // Ejecutar mi proceso si no require ser bloqueado
       if (hayProcesoEnEjecucion()) {
         GraficoController.grafico[getProcesoEnEjecucion().getNombreProceso() +
-          1][Tiempo.tiempo] =
-          " X ";
-          getProcesoEnEjecucion().incrementarTiempoEmpleado();
+            1][Tiempo.tiempo] = " X ";
+        getProcesoEnEjecucion().incrementarTiempoEmpleado();
         continue;
       }
 
-      //Cargar procesos
+      // Cargar procesos
       if (hayProcesoEn(Estado.NUEVO)) {
-        GraficoController.grafico[5][Tiempo.tiempo] =
-          "1P" + getPrimerProcesoEn(Estado.NUEVO).getNombreProceso();
+        GraficoController.grafico[5][Tiempo.tiempo] = "1P" + getPrimerProcesoEn(Estado.NUEVO).getNombreProceso();
         getPrimerProcesoEn(Estado.NUEVO).setEstado(Estado.LISTO);
         continue;
       }
 
-      if(getPrimerProcesoQueRequieraSerDesbloqueado() != null){
+      if (getPrimerProcesoQueRequieraSerDesbloqueado() != null) {
         Proceso p = getPrimerProcesoQueRequieraSerDesbloqueado();
-        if(p == null) return;
+        if (p == null)
+          return;
         ProcesoController.procesosPorEjecutar.remove(p);
         ProcesoController.procesosPorEjecutar.add(p);
         GraficoController.grafico[5][Tiempo.tiempo] = "4P" + p.getNombreProceso();
-        if(p.ciclosParaEjecutar.isEmpty()){
+        if (p.ciclosParaEjecutar.isEmpty()) {
           GraficoController.grafico[5][Tiempo.tiempo] = "6P" + p.getNombreProceso();
           p.setEstado(Estado.TERMINADO);
         }
@@ -122,52 +109,63 @@ public abstract class RutinasController {
         p.setEstado(Estado.LISTO);
         continue;
       }
- 
-      //Mandar procesos de listo a ejecucion
+
+      // Mandar procesos de listo a ejecucion
       if (hayProcesoEn(Estado.LISTO) || getPrimerProcesoEn(Estado.LISTO) != null) {
         Proceso proceso = null;
-        for(Proceso p: ProcesoController.procesos){
-          if(p.getEstado() == Estado.TERMINADO) continue;
-          if(p.getEstado() != Estado.LISTO) continue;
-          if(p.getEstado() != Estado.TERMINADO && p.getEstado() == Estado.LISTO){
+        for (Proceso p : ProcesoController.procesos) {
+          if (p.getEstado() == Estado.TERMINADO)
+            continue;
+          if (p.getEstado() != Estado.LISTO)
+            continue;
+          if (p.getEstado() != Estado.TERMINADO && p.getEstado() == Estado.LISTO) {
             proceso = getProcesoMasCorto();
             break;
           }
         }
-          GraficoController.grafico[5][Tiempo.tiempo] =
-            "2P" + proceso.getNombreProceso();
-        proceso.setEstado(Estado.EJECUCCION); 
+        GraficoController.grafico[5][Tiempo.tiempo] = "2P" + proceso.getNombreProceso();
+        proceso.setEstado(Estado.EJECUCCION);
         continue;
       }
     }
-    GraficoController.imprimirTabla();
+    if (ComparativaController.imprimirGrafica) {
+      GraficoController.imprimirTabla();
+    }
+
+    if (esJSFD) {
+      ComparativaController.tiempoJSFD = Tiempo.tiempo;
+    } else {
+      ComparativaController.tiempoJSF = Tiempo.tiempo;
+    }
+
     Tiempo.tiempo = 0;
   }
 
-  public static boolean hayProcesoEnEjecucion(){
+  public static boolean hayProcesoEnEjecucion() {
     return getProcesoEnEjecucion() != null;
-  } 
+  }
 
-  public static Proceso getProcesoEnEjecucion(){
+  public static Proceso getProcesoEnEjecucion() {
     Proceso proceso = null;
-    for(Proceso p : ProcesoController.procesosPorEjecutar){
-        if(p.getEstado() == Estado.EJECUCCION)proceso = p;
+    for (Proceso p : ProcesoController.procesosPorEjecutar) {
+      if (p.getEstado() == Estado.EJECUCCION)
+        proceso = p;
     }
     return proceso;
   }
 
-  public static void incrementarTiempoBloqueado(){
-    for(Proceso p : ProcesoController.procesosPorEjecutar){
-        if(p.getEstado() == Estado.BLOQUEADO){
-            p.incrementarTiempoBloqueado();
-        }
+  public static void incrementarTiempoBloqueado() {
+    for (Proceso p : ProcesoController.procesosPorEjecutar) {
+      if (p.getEstado() == Estado.BLOQUEADO) {
+        p.incrementarTiempoBloqueado();
+      }
     }
   }
 
-  public static boolean hayProcesoEn(Estado setState){
+  public static boolean hayProcesoEn(Estado setState) {
     boolean hayProceso = false;
-    for(Proceso p : ProcesoController.procesosPorEjecutar){
-      if(p.getEstado() == setState) {
+    for (Proceso p : ProcesoController.procesosPorEjecutar) {
+      if (p.getEstado() == setState) {
         hayProceso = true;
         break;
       }
@@ -175,55 +173,56 @@ public abstract class RutinasController {
     return hayProceso;
   }
 
-  public static Proceso getPrimerProcesoEn(Estado forSetState){
+  public static Proceso getPrimerProcesoEn(Estado forSetState) {
     Proceso proceso = null;
 
-    for(Proceso p : ProcesoController.procesosPorEjecutar)
-        if(p.getEstado() == forSetState){
-            proceso = p; 
-            break;
-        }
-        return proceso;
+    for (Proceso p : ProcesoController.procesosPorEjecutar)
+      if (p.getEstado() == forSetState) {
+        proceso = p;
+        break;
+      }
+    return proceso;
   }
 
-  public static Proceso getPrimerProcesoQueRequieraSerDesbloqueado(){
+  public static Proceso getPrimerProcesoQueRequieraSerDesbloqueado() {
     Proceso proceso = null;
 
-    for(Proceso p : ProcesoController.procesosPorEjecutar){
-        if(p.getEstado() != Estado.BLOQUEADO) continue;
-        if(p.deboDesbloquear()){
-            proceso = p;
-            break;
-        } 
+    for (Proceso p : ProcesoController.procesosPorEjecutar) {
+      if (p.getEstado() != Estado.BLOQUEADO)
+        continue;
+      if (p.deboDesbloquear()) {
+        proceso = p;
+        break;
+      }
     }
     return proceso;
   }
 
-  public static boolean hayProcesosQueRequirenSerDesbloqueados(){
+  public static boolean hayProcesosQueRequirenSerDesbloqueados() {
     return getPrimerProcesoQueRequieraSerDesbloqueado() != null;
   }
 
-  public static Proceso getProcesoMasCorto(){
+  public static Proceso getProcesoMasCorto() {
     Proceso proceso = null;
     int menorTiempoDeRafagaActual = Integer.MAX_VALUE;
     int menorTiempoTotal = Integer.MAX_VALUE;
     ArrayList procesosConElMismoTiempoDeEjecucion = new ArrayList();
 
-
     // TODO: ordenan la lista con el mas corto en rafaga actual
 
-
-    for(Proceso p : ProcesoController.procesosPorEjecutar){
-      if(p.getEstado() != Estado.LISTO) continue;
-      if(p.getRafagaActual() < menorTiempoDeRafagaActual) {
+    for (Proceso p : ProcesoController.procesosPorEjecutar) {
+      if (p.getEstado() != Estado.LISTO)
+        continue;
+      if (p.getRafagaActual() < menorTiempoDeRafagaActual) {
         menorTiempoDeRafagaActual = p.getRafagaActual();
       }
-    
+
     }
 
-    for(Proceso p : ProcesoController.procesosPorEjecutar){
-      if(p.getEstado() != Estado.LISTO) continue;
-      if(menorTiempoDeRafagaActual == p.getRafagaActual()){
+    for (Proceso p : ProcesoController.procesosPorEjecutar) {
+      if (p.getEstado() != Estado.LISTO)
+        continue;
+      if (menorTiempoDeRafagaActual == p.getRafagaActual()) {
         proceso = p;
         break;
       }
