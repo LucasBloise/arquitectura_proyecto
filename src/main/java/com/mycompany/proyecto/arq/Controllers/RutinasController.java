@@ -209,9 +209,8 @@ public abstract class RutinasController {
     int menorTiempoTotal = Integer.MAX_VALUE;
     ArrayList procesosConElMismoTiempoDeEjecucion = new ArrayList();
 
-    // TODO: armar unalista conlosprocesos en listo
+
     // TODO: ordenan la lista con el mas corto en rafaga actual
-    // TODO: Deberia preguntar si dos procesos tienen la misma duracion en la rafa actual si es asi, remover el proceso con el tiempo de ejeccion total nuevamente cakcylado
 
 
     for(Proceso p : ProcesoController.procesosPorEjecutar){
