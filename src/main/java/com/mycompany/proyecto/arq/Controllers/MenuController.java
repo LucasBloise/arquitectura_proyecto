@@ -22,7 +22,8 @@ public class MenuController {
         System.out.println("3 - Mostrar grafica de JSF");
         System.out.println("4 - Mostrar grafica de JSF/D");
         System.out.println("5 - Limpiar cola de Procesos");
-        System.out.println("6 - Carga automatica de Procesos");
+        System.out.println("6 - Mostrar  comparativa entre politicas");
+        System.out.println("7 - Carga automatica de Procesos");
         System.out.println("Pulse enter para salir");
         System.out.println("-----------------------------------");
     }
@@ -82,6 +83,16 @@ public class MenuController {
                 sc.nextLine();
                 break;
             case "6":
+                if (!ProcesoController.procesos.isEmpty()) {
+                    // mostrar comparativa
+
+                } else {
+                    System.out.print("\033[H\033[2J");
+                    System.out.println("No tienes procesos cargados");
+                    System.out.println("Presiona enter para volver al menu");
+                    sc.nextLine();
+                }
+            case "7":
                 ProcesoController.procesos.clear();
                 ProcesoController.procesosPorEjecutar.clear();
                 ProcesoController.cargaAutomatica();
