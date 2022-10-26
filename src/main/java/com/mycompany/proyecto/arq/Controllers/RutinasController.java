@@ -52,9 +52,12 @@ public abstract class RutinasController {
         esJSFD &&
         hayProcesoEn(Estado.NUEVO) &&
         hayProcesoEnEjecucion() &&
-        getPrimerProcesoEn(Estado.NUEVO).getTiempoRequerido() <
+        getPrimerProcesoEn(Estado.NUEVO).getRafagaActual() <
         getProcesoEnEjecucion().getTiempoRequerido()
       ) {
+        GraficoController.grafico[getProcesoEnEjecucion().getNombreProceso() + 1][Tiempo.tiempo] = " X ";
+        getProcesoEnEjecucion().incrementarTiempoEmpleado();
+        Tiempo.tiempo++;
         GraficoController.grafico[5][Tiempo.tiempo] =
           "5P" + getProcesoEnEjecucion().getNombreProceso();
         getProcesoEnEjecucion().setEstado(Estado.LISTO);
@@ -101,7 +104,7 @@ public abstract class RutinasController {
       }
 
       //Cargar procesos
-      if (hayProcesoEn(Estado.NUEVO)) {
+      if (hayProcesoEn(Estado.NUEVO) && getPrimerProcesoEn(Estado.NUEVO).getTiempoDeLlegada() <= Tiempo.tiempo) {
         GraficoController.grafico[5][Tiempo.tiempo] =
           "1P" + getPrimerProcesoEn(Estado.NUEVO).getNombreProceso();
         getPrimerProcesoEn(Estado.NUEVO).setEstado(Estado.LISTO);
@@ -206,12 +209,7 @@ public abstract class RutinasController {
   public static Proceso getProcesoMasCorto(){
     Proceso proceso = null;
     int menorTiempoDeRafagaActual = Integer.MAX_VALUE;
-    int menorTiempoTotal = Integer.MAX_VALUE;
-    ArrayList procesosConElMismoTiempoDeEjecucion = new ArrayList();
 
-    // TODO: armar unalista conlosprocesos en listo
-    // TODO: ordenan la lista con el mas corto en rafaga actual
-    // TODO: Deberia preguntar si dos procesos tienen la misma duracion en la rafa actual si es asi, remover el proceso con el tiempo de ejeccion total nuevamente cakcylado
 
 
     for(Proceso p : ProcesoController.procesosPorEjecutar){
