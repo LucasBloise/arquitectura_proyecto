@@ -44,11 +44,21 @@ public abstract class RutinasController {
 
       // Incrementar tiempo en bloqueo
 
-      if (esJSFD &&
-          hayProcesoEn(Estado.NUEVO) &&
-          hayProcesoEnEjecucion() &&
-          getPrimerProcesoEn(Estado.NUEVO).getTiempoRequerido() < getProcesoEnEjecucion().getTiempoRequerido()) {
-        GraficoController.grafico[5][Tiempo.tiempo] = "5P" + getProcesoEnEjecucion().getNombreProceso();
+    
+      
+
+      if (
+        esJSFD &&
+        hayProcesoEn(Estado.NUEVO) &&
+        hayProcesoEnEjecucion() &&
+        getPrimerProcesoEn(Estado.NUEVO).getRafagaActual() <
+        getProcesoEnEjecucion().getTiempoRequerido()
+      ) {
+        GraficoController.grafico[getProcesoEnEjecucion().getNombreProceso() + 1][Tiempo.tiempo] = " X ";
+        getProcesoEnEjecucion().incrementarTiempoEmpleado();
+        Tiempo.tiempo++;
+        GraficoController.grafico[5][Tiempo.tiempo] =
+          "5P" + getProcesoEnEjecucion().getNombreProceso();
         getProcesoEnEjecucion().setEstado(Estado.LISTO);
         continue;
       }
@@ -87,9 +97,10 @@ public abstract class RutinasController {
         continue;
       }
 
-      // Cargar procesos
-      if (hayProcesoEn(Estado.NUEVO)) {
-        GraficoController.grafico[5][Tiempo.tiempo] = "1P" + getPrimerProcesoEn(Estado.NUEVO).getNombreProceso();
+      //Cargar procesos
+      if (hayProcesoEn(Estado.NUEVO) && getPrimerProcesoEn(Estado.NUEVO).getTiempoDeLlegada() <= Tiempo.tiempo) {
+        GraficoController.grafico[5][Tiempo.tiempo] =
+          "1P" + getPrimerProcesoEn(Estado.NUEVO).getNombreProceso();
         getPrimerProcesoEn(Estado.NUEVO).setEstado(Estado.LISTO);
         continue;
       }
@@ -205,15 +216,12 @@ public abstract class RutinasController {
   public static Proceso getProcesoMasCorto() {
     Proceso proceso = null;
     int menorTiempoDeRafagaActual = Integer.MAX_VALUE;
-    int menorTiempoTotal = Integer.MAX_VALUE;
-    ArrayList procesosConElMismoTiempoDeEjecucion = new ArrayList();
 
-    // TODO: ordenan la lista con el mas corto en rafaga actual
 
-    for (Proceso p : ProcesoController.procesosPorEjecutar) {
-      if (p.getEstado() != Estado.LISTO)
-        continue;
-      if (p.getRafagaActual() < menorTiempoDeRafagaActual) {
+
+    for(Proceso p : ProcesoController.procesosPorEjecutar){
+      if(p.getEstado() != Estado.LISTO) continue;
+      if(p.getRafagaActual() < menorTiempoDeRafagaActual) {
         menorTiempoDeRafagaActual = p.getRafagaActual();
       }
 
