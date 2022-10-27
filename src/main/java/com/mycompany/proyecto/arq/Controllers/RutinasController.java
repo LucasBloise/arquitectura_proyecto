@@ -9,7 +9,7 @@ public abstract class RutinasController {
 
   public static void ejecutarProcesos(boolean esJSFD) {
 
-    for (Tiempo.tiempo = 0; Tiempo.tiempo < 35; Tiempo.tiempo++) {
+    for (Tiempo.tiempo = 0; getProcesosTerminados() <= 2; Tiempo.tiempo++) {
       // Para evitar desbordamientos
       if (Tiempo.tiempo == GraficoController.grafico[0].length)
         break;
@@ -44,21 +44,14 @@ public abstract class RutinasController {
 
       // Incrementar tiempo en bloqueo
 
-    
-      
-
-      if (
-        esJSFD &&
-        hayProcesoEn(Estado.NUEVO) &&
-        hayProcesoEnEjecucion() &&
-        getPrimerProcesoEn(Estado.NUEVO).getRafagaActual() <
-        getProcesoEnEjecucion().getTiempoRequerido()
-      ) {
+      if (esJSFD &&
+          hayProcesoEn(Estado.NUEVO) &&
+          hayProcesoEnEjecucion() &&
+          getPrimerProcesoEn(Estado.NUEVO).getRafagaActual() < getProcesoEnEjecucion().getTiempoRequerido()) {
         GraficoController.grafico[getProcesoEnEjecucion().getNombreProceso() + 1][Tiempo.tiempo] = " X ";
         getProcesoEnEjecucion().incrementarTiempoEmpleado();
         Tiempo.tiempo++;
-        GraficoController.grafico[5][Tiempo.tiempo] =
-          "5P" + getProcesoEnEjecucion().getNombreProceso();
+        GraficoController.grafico[5][Tiempo.tiempo] = "5P" + getProcesoEnEjecucion().getNombreProceso();
         getProcesoEnEjecucion().setEstado(Estado.LISTO);
         continue;
       }
@@ -97,10 +90,9 @@ public abstract class RutinasController {
         continue;
       }
 
-      //Cargar procesos
+      // Cargar procesos
       if (hayProcesoEn(Estado.NUEVO) && getPrimerProcesoEn(Estado.NUEVO).getTiempoDeLlegada() <= Tiempo.tiempo) {
-        GraficoController.grafico[5][Tiempo.tiempo] =
-          "1P" + getPrimerProcesoEn(Estado.NUEVO).getNombreProceso();
+        GraficoController.grafico[5][Tiempo.tiempo] = "1P" + getPrimerProcesoEn(Estado.NUEVO).getNombreProceso();
         getPrimerProcesoEn(Estado.NUEVO).setEstado(Estado.LISTO);
         continue;
       }
@@ -217,11 +209,10 @@ public abstract class RutinasController {
     Proceso proceso = null;
     int menorTiempoDeRafagaActual = Integer.MAX_VALUE;
 
-
-
-    for(Proceso p : ProcesoController.procesosPorEjecutar){
-      if(p.getEstado() != Estado.LISTO) continue;
-      if(p.getRafagaActual() < menorTiempoDeRafagaActual) {
+    for (Proceso p : ProcesoController.procesosPorEjecutar) {
+      if (p.getEstado() != Estado.LISTO)
+        continue;
+      if (p.getRafagaActual() < menorTiempoDeRafagaActual) {
         menorTiempoDeRafagaActual = p.getRafagaActual();
       }
 
@@ -240,4 +231,16 @@ public abstract class RutinasController {
 
   }
 
+  public static int getProcesosTerminados() {
+
+    int cantidadAux = 0;
+
+    for (Proceso p : ProcesoController.procesosPorEjecutar) {
+      if (p.getEstado() == Estado.TERMINADO)
+        cantidadAux = cantidadAux + 1;
+    }
+
+    return cantidadAux;
+
+  }
 }
