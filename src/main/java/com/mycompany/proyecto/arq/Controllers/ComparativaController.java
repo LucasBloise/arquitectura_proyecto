@@ -7,16 +7,15 @@ public class ComparativaController {
 
     public static void mostrarComparativa() {
         RutinasController.ejecutarProcesos(false);
-        System.out.println("Tiempo con JSF: " + tiempoJSF);
+        System.out.println("Tiempo con JSF: " + (tiempoJSF - 1));
         limpiarMemoria();
         RutinasController.ejecutarProcesos(true);
-        System.out.println("Tiempo con JSFD: " + tiempoJSFD);
+        System.out.println("Tiempo con JSFD: " + (tiempoJSFD - 1));
     }
 
     public static void limpiarMemoria() {
         ProcesoController.procesosPorEjecutar.clear();
-        ProcesoController.procesos.clear();
-        GraficoController.grafico = new String[7][99];
+        GraficoController.grafico = new String[7][1000];
         Tiempo.tiempo = 0;
     }
 }

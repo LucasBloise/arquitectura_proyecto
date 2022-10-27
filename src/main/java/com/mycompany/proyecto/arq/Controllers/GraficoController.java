@@ -3,16 +3,16 @@ package com.mycompany.proyecto.arq.Controllers;
 import javax.swing.*;
 
 public class GraficoController {
-    public static String[][] grafico = new String[7][99];
+    public static String[][] grafico = new String[7][1000];
 
     public static void imprimirTabla() {
 
         String posicion;
-        System.out.println(
-                "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        for(int i = 0; i< Tiempo.tiempo; i++) System.out.print("------");
+        System.out.println();
         for (int i = 0; i < 7; i++) {
 
-            for (int j = 0; j < 35; j++) {
+            for (int j = 0; j < Tiempo.tiempo; j++) {
                 posicion = grafico[i][j];
                 if (i == 0 && j == 0)
                     System.out.print("| Listo     |");
@@ -44,11 +44,11 @@ public class GraficoController {
             }
             System.out.println();
 
-            System.out.println(
-                    "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            for(int setState = 0; setState< Tiempo.tiempo; setState++) System.out.print("------");
+        System.out.println();
 
         }
-        GraficoController.grafico = new String[7][99];
+        GraficoController.grafico = new String[7][1000];
     }
 
     
