@@ -156,6 +156,11 @@ public class Proceso {
         this.tiempoRequerido += p;
     }
 
+    public Proceso crearAux (){
+        Proceso p = new Proceso(this.cantidadRafagas, this.tiempoDeLlegada, this.nombreProceso, this.tiempoRequerido, this.tiempoEmpleado, this.tiempoBloqueado, new ArrayList<Integer>(this.ciclosParaEjecutar), Estado.NUEVO);
+        return p;
+    }
+
     public void imprimir() {
         System.out.println("Proceso" + this.nombreProceso);
         System.out.println("TiempoDeLlegada" + this.tiempoDeLlegada);

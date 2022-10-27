@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public abstract class RutinasController {
 
   public static void ejecutarProcesos(boolean esJSFD) {
+    ProcesoController.reiniciarProcesos();
 
     for (Tiempo.tiempo = 0; getProcesosTerminados() <= 2; Tiempo.tiempo++) {
       // Para evitar desbordamientos
@@ -116,7 +117,7 @@ public abstract class RutinasController {
       // Mandar procesos de listo a ejecucion
       if (hayProcesoEn(Estado.LISTO) || getPrimerProcesoEn(Estado.LISTO) != null) {
         Proceso proceso = null;
-        for (Proceso p : ProcesoController.procesos) {
+        for (Proceso p : ProcesoController.procesosPorEjecutar) {
           if (p.getEstado() == Estado.TERMINADO)
             continue;
           if (p.getEstado() != Estado.LISTO)
@@ -142,6 +143,7 @@ public abstract class RutinasController {
     }
 
     Tiempo.tiempo = 0;
+    ProcesoController.reiniciarProcesos();
   }
 
   public static boolean hayProcesoEnEjecucion() {

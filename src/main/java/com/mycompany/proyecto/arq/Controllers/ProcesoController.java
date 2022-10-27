@@ -21,6 +21,8 @@ public class ProcesoController {
 
   public static void cargarProcesos() {
 
+    procesos = new ArrayList<Proceso>();
+
     for (int i = 0; i < 3; i++) {
 
       System.out.println("Proceso: " + (i + 1));
@@ -44,13 +46,23 @@ public class ProcesoController {
       Proceso p = new Proceso(CantidadRafagas, tiempoDeLlegada, nombreProceso, tiempoTotal, 0, 0, rafagas,
           Estado.NUEVO);
 
-      procesos.add(p);
 
-      procesosPorEjecutar.add(p);
+      procesos.add(p);
     }
   }
 
+  public static void reiniciarProcesos(){
+    
+    procesosPorEjecutar = new ArrayList<Proceso>();
+    for(Proceso p : procesos){
+      procesosPorEjecutar.add(p.crearAux());
+    }
+  };
+  
+
   public static void cargaAutomatica() {
+
+    procesos = new ArrayList<Proceso>();
 
     for (int i = 0; i < 3; i++) {
 
@@ -73,9 +85,8 @@ public class ProcesoController {
       Proceso p = new Proceso(CantidadRafagas, tiempoDeLlegada, nombreProceso, tiempoTotal, 0, 0, rafagas,
           Estado.NUEVO);
 
+            
       procesos.add(p);
-
-      procesosPorEjecutar.add(p);
     }
   }
 
