@@ -6,10 +6,10 @@ public class ComparativaController {
     public static int tiempoJSFD = 0;
 
     public static void mostrarComparativa() {
-        RutinasController.ejecutarProcesos(false);
+        EjecucionController.ejecutarProcesos(false);
         System.out.println("Tiempo con JSF: " + (tiempoJSF - 1));
         limpiarMemoria();
-        RutinasController.ejecutarProcesos(true);
+        EjecucionController.ejecutarProcesos(true);
         System.out.println("Tiempo con JSFD: " + (tiempoJSFD - 1));
     }
 

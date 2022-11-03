@@ -5,7 +5,7 @@ import com.mycompany.proyecto.arq.Proceso;
 
 import java.util.ArrayList;
 
-public abstract class RutinasController {
+public abstract class EjecucionController {
 
   public static void ejecutarProcesos(boolean esJSFD) {
     ProcesoController.reiniciarProcesos();
